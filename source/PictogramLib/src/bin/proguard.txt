@@ -1,3 +1,0 @@
-# view AndroidManifest.xml #generated:9
--keep class dk.aau.cs.giraf.ACTIVITY_ENTRY_NAME { <init>(...); }
-
