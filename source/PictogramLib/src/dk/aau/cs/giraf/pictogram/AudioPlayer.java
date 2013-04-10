@@ -25,47 +25,47 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 
-
-/*
- * File kindly borrowed from Parrot, which previously borrowed it from digiPECS.
+/**
+ * @author Croc
+ * @author digiPECS
  */
 public enum AudioPlayer{
     INSTANCE;
     private static MediaPlayer mediaPlayer;
-    private final static String TAG = "GIRAF_Pictogram_AudioPlayer";
+    private final static String TAG = "AudioPlayer";
 
+    /**
+     * Opens the {@link MediaPlayer} this is called as soon as the object
+     * appears in memory.
+     */
     private AudioPlayer(){
-        // not entierly sure what this is supposed to accomplish.
-        // Log.v(TAG, "index=" + i);
-
         open();
     }
 
-    // Commented because of a disagreement with people of the greater republic of republics.
-    // private static AudioPlayer getInstance(){
-    //     if(mInstance==null){
-    //         mInstance = new AudioPlayer();
-    //     }
-    //     return mInstance;
-    // }
-
     /**
-     *
+     * Creates the {@link MediaPlayer} object, this object is used for playing
+     * audio.
      */
     public static void open(){
         mediaPlayer = new MediaPlayer();
     }
 
+    /**
+     * Releases the {@link MediaPlayer}, making it a null object.
+     */
     public static void close(){
         mediaPlayer.release();
     }
-
+    
+    /**
+     * This method tries to reset the {@link MediaPlayer}. If it did not
+     * succeed it will retry, closing and opening it.
+     */
     public static void reset(){
         try{
             Log.i(TAG,"Resetting AudioPlayer.");
             mediaPlayer.reset();
         } catch (IllegalStateException e){
-            // when is an object really a mediaplayer, the state says "When playback!", the communists say "Every object is a mediaplayer!", the religious says "mediaplayer belongs to the JVM!". I say a mediaplayer chooses, an object obeys!
             Log.e(TAG,"Could not reset AudioPlayer.");
             Log.i(TAG, "Attempting to reopen AudioPlayer.");
             close();
@@ -73,11 +73,21 @@ public enum AudioPlayer{
         }
     }
 
-    public static void play(final String path){
+    /**
+     * Plays a specific piece of audio.
+     * @param path the path to a piece of audio.
+     */
+    public void play(final String path){
         play(path, null);
     }
 
-    public static void play(final String path, final OnCompletionListener listener){
+    /**
+     * Plays a specific piece of audio. Taking a listener for use when the
+     * audio has finished playing.
+     * @param path the path to a piece of audio.
+     * @param listener the callback that will be run
+     */
+    public void play(final String path, final OnCompletionListener listener){
         //TODO find out if we should stop any ongoing playback or not, current implementation stops playback. Making it an user defined option might be too much?
         //TODO play is blocking, make this not true by implementing a seperate thread?
         try {
@@ -98,7 +108,8 @@ public enum AudioPlayer{
             e.printStackTrace();
         } catch (IOException e) {
             //TODO make this exception take proper action instead of just failing and shutting up.
-            Log.e(TAG, "play thres an IOException, please check if your path is correct.");
+            //TODO make this exception more informative.
+            Log.e(TAG, "play throws an IOException.");
             e.printStackTrace();
         }
     }
