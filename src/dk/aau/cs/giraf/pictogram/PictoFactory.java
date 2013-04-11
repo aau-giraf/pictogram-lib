@@ -10,17 +10,15 @@ import android.os.Environment;
 import android.util.Log;
 
 import dk.aau.cs.giraf.oasis.lib.Helper;
-import dk.aau.cs.giraf.oasis.lib.models.Media;
-import dk.aau.cs.giraf.oasis.lib.models.Profile;
-import dk.aau.cs.giraf.oasis.lib.controllers.MediaHelper;
-
+import dk.aau.cs.giraf.oasis.lib.models.*;
+import dk.aau.cs.giraf.oasis.lib.controllers.*;
 
 
 //TODO: Make this a service that applications can hook to
 //TODO: If made local, set it to run in seperate thread (DBsync and traversing can be costly)
 
 /**
- * 
+ *
  * @author Croc
  *
  */
@@ -44,14 +42,8 @@ public enum PictoFactory {
         List<Media> allMedia = mediaHelper.getMedia();
         List<Pictogram> allPictograms = new ArrayList<Pictogram>();
 
-        for(Media media : allMedia){
-            try{
-                allPictograms.add(convertMedia(context, media));
-            } catch (IllegalArgumentException exc){
-                // we ignore this exception because there is no need to do
-                // anything about misses in the database.
-            }
-        }
+        allPictograms = convertMedias(context, allMedia);
+
         return allPictograms;
     }
 
@@ -66,11 +58,12 @@ public enum PictoFactory {
      * @param media a media object to be converted to a pictogram
      * @return a pictogram that matches the media
      * @throws IllegalArgumentException if the media is not found to be of the
-     * 		   correct type it will be rejected with this exception.
+     *             correct type it will be rejected with this exception.
      */
     public static Pictogram convertMedia(Context context, Media media) throws IllegalArgumentException{
         try{
             if(media.getMType().equalsIgnoreCase("IMAGE")){
+                databaseHelper = new Helper(context);
                 List<Media> subs = databaseHelper.mediaHelper.getSubMediaByMedia(media);
                 String aud = null;
                 Pictogram pictogram;
@@ -110,6 +103,30 @@ public enum PictoFactory {
             return null;
         }
     }
+
+    public static List<Pictogram> convertMedias(Context context, List<Media> medias){
+        try {
+            List<Pictogram> pictograms = new ArrayList<Pictogram>();
+
+            for(Media m : medias){
+                try{
+                    pictograms.add(convertMedia(context, m));
+                } catch (IllegalArgumentException exc){
+                    // we ignore this exception because there is no need to do
+                    // anything about misses in the database.
+                }
+            }
+
+            return pictograms;
+        } catch(NullPointerException e) {
+            String msg = "Null object passed to convertMedias.";
+            Log.e(TAG, msg);
+
+            return null;
+        }
+
+    }
+
     /**
      * Gets all pictograms owned by a specific profile.
      * @param context the context in which the method is executed.
@@ -120,47 +137,78 @@ public enum PictoFactory {
         List<Pictogram> pictograms = new ArrayList<Pictogram>();
         List<Media> medias;
         databaseHelper = new Helper(context);
-        MediaHelper mediaHelper = databaseHelper.mediaHelper;
 
-        medias = mediaHelper.getMediaByProfile(profile);
+        medias = databaseHelper.mediaHelper.getMediaByProfile(profile);
 
-        for(Media m : medias){
-            try{
-                pictograms.add(convertMedia(context, m));
-            } catch (IllegalArgumentException exc){
-                // we ignore this exception because there is no need to do
-                // anything about misses in the database.
-            }
-        }
-
+        pictograms = convertMedias(context, medias);
         return pictograms;
     }
 
 
     /**
-     * <b> Unimplemented method, please do not call!</b>
-     *
-     * <p>Get all Pictograms that match a list of tags.
+     * <p>Get all Pictograms that match a tag.
      * @param context the context in which the method is executed.
      * @param tag the tag which should be found.
      * @return a pictogram.
      */
-    public static Pictogram getPictogramsByTag(Context context, String tag){
-        return null;
+    public static List<Pictogram> getPictogramsByTag(Context context, String tag){
+        databaseHelper = new Helper(context);
+        List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
+        List<Pictogram> pictograms = new ArrayList();
+        ArrayList<Tag> matchingTag = null;
+        List<Media> matchedMedias = new ArrayList();
+
+
+        for(Tag t : allTagsEver){
+            if(t.getCaption() == tag){
+                matchingTag.add(t);
+                break;
+            }
+        }
+
+        if(matchingTag == null){
+            return null;
+        }
+
+        matchedMedias = databaseHelper.mediaHelper.getMediaByTags(matchingTag);
+
+        pictograms = convertMedias(context, matchedMedias);
+
+        return pictograms;
     }
 
     /**
-     * <b> Unimplemented method, please do not call!</b>
+     * <b> Made of bad runtime.</b>
      *
      * <p>Get all Pictograms that match a list of tags.
+     *
+     * <p> This does not use the getPictogramsByTag method because of the way
+     * tags are implemented in the database, every tag has to be checked against
+     * the query...
      * @param context the context in which the method is executed.
      * @param tags the tags which should be found.
      * @return a list of pictograms.
      */
-    public static List<Pictogram> getPictogramsByTag(Context context, String[] tags){
-        return null;
-    }
+    public static List<Pictogram> getPictogramsByTags(Context context, String[] tags){
+        databaseHelper = new Helper(context);
+        List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
+        ArrayList<Tag> matchingTag = null;
+        List<Pictogram> pictograms = new ArrayList();
+        List<Media> matchedMedias = new ArrayList();
+        for(String tag : tags){
+            for(Tag t : allTagsEver){
+                if(t.getCaption() == tag){
+                    matchingTag.add(t);
+                }
+            }
+        }
 
+        matchedMedias = databaseHelper.mediaHelper.getMediaByTags(matchingTag);
+
+        pictograms = convertMedias(context, matchedMedias);
+
+        return pictograms;
+    }
     /**
      * Gets a specific pictogram from the database.
      * @param context the context in which the method is executed.
