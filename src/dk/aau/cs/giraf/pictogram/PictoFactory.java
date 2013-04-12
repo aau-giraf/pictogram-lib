@@ -1,12 +1,9 @@
 package dk.aau.cs.giraf.pictogram;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import dk.aau.cs.giraf.oasis.lib.Helper;

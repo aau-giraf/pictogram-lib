@@ -20,7 +20,7 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
  * @author Croc
  *
  */
-public class Pictogram extends FrameLayout implements IPictogram {
+public class Pictogram extends FrameLayout {
     private static final String TAG = "Pictogram";
 
     private final String imagePath;
@@ -60,7 +60,6 @@ public class Pictogram extends FrameLayout implements IPictogram {
      * Populates the view with both image and text, making it an actual viewable
      * view.
      */
-    @Override
     public void renderAll() {
         renderImage();
         renderText();
@@ -72,7 +71,6 @@ public class Pictogram extends FrameLayout implements IPictogram {
      * The gravity is by default set to {@value} TODO insert value
      * {@link #renderText(int)} can be used if you want to place the text.
      */
-    @Override
     public void renderText() {
         TextView text = new TextView(getContext());
         text.setText(textLabel);
@@ -95,7 +93,6 @@ public class Pictogram extends FrameLayout implements IPictogram {
     /**
      * Populates the view with an image, making it an actual viewable view.
      */
-    @Override
     public void renderImage() {
         Bitmap img = BitmapFactory.decodeFile(imagePath);
         ImageView image = new ImageView(getContext());
@@ -112,7 +109,6 @@ public class Pictogram extends FrameLayout implements IPictogram {
         return audioPath != null;
     }
 
-    @Override
     public void playAudio() {
         playAudio(null);
     }
@@ -123,7 +119,8 @@ public class Pictogram extends FrameLayout implements IPictogram {
     public void playAudio(final OnCompletionListener listener){
         if(hasAudio()){
             new Thread(new Runnable(){
-                    public void run(){
+                    @Override
+					public void run(){
                         AudioPlayer.INSTANCE.play(audioPath, listener);
                     }
                 }).start();
@@ -142,38 +139,7 @@ public class Pictogram extends FrameLayout implements IPictogram {
      * <p> Get tags attached to the pictogram.
      * TODO implement properly.
      */
-    @Override
     public String[] getTags() {
-        return null;
-    }
-
-    /**
-     * <b>NOT YET IMPLEMENTED!</b>
-     *
-     * Returns the data of the image path if it has been generated.
-     */
-    @Override
-    public String getImageData() {
-        return null;
-    }
-
-    /**
-     * <b>NOT YET IMPLEMENTED!</b>
-     *
-     * Returns the data from the audio path if it has been generated.
-     */
-    @Override
-    public String getAudioData() {
-        return null;
-    }
-
-    /**
-     * <b>Pointless!</b>
-     *
-     * This method is functionally pointless, don't call it.
-     */
-    @Override
-    public String getTextData() {
         return null;
     }
 
