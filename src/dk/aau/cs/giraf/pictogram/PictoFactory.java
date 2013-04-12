@@ -119,7 +119,7 @@ public enum PictoFactory {
      */
     public static List<Pictogram> convertMedias(Context context, Collection<Media> medias){
         try {
-            pictograms = new ArrayList<Pictogram>();
+            List<Pictogram> pictograms = new ArrayList<Pictogram>();
 
             for(Media m : medias){
                 try{
