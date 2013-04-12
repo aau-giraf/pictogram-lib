@@ -118,7 +118,6 @@ public enum PictoFactory {
      *             correct type it will be rejected with this exception.
      */
     public static List<Pictogram> convertMedias(Context context, Collection<Media> medias){
-    	List<Pictogram> pictograms;
         try {
             pictograms = new ArrayList<Pictogram>();
 
@@ -130,12 +129,12 @@ public enum PictoFactory {
                     // anything about misses in the database.
                 }
             }
+            return pictograms;
         } catch(NullPointerException e) {
             String msg = "Null object passed to convertMedias.";
             Log.e(TAG, msg);
             return null;
         }
-        return pictograms;
     }
 
     /**
