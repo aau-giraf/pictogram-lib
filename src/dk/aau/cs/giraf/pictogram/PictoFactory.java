@@ -1,6 +1,8 @@
 package dk.aau.cs.giraf.pictogram;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
@@ -101,9 +103,24 @@ public enum PictoFactory {
         }
     }
 
-    public static List<Pictogram> convertMedias(Context context, List<Media> medias){
+
+    /**
+     * Takes a collection of media and converts it to a list of pictograms.
+     *
+     * <p> Be warned that the first piece of submedia found will be set
+     * as the audio for the pictogram, so if there is a mistake in the DB
+     * it will live on by this function.
+     *
+     * @param context the context in which the method is executed.
+     * @param medias a collection of medias matching Oasis models.
+     * @return a list of pictograms, converted from the medias
+     * @throws IllegalArgumentException if the media is not found to be of the
+     *             correct type it will be rejected with this exception.
+     */
+    public static List<Pictogram> convertMedias(Context context, Collection<Media> medias){
+    	List<Pictogram> pictograms;
         try {
-            List<Pictogram> pictograms = new ArrayList<Pictogram>();
+            pictograms = new ArrayList<Pictogram>();
 
             for(Media m : medias){
                 try{
@@ -113,15 +130,12 @@ public enum PictoFactory {
                     // anything about misses in the database.
                 }
             }
-
-            return pictograms;
         } catch(NullPointerException e) {
             String msg = "Null object passed to convertMedias.";
             Log.e(TAG, msg);
-
             return null;
         }
-
+        return pictograms;
     }
 
     /**
@@ -152,18 +166,17 @@ public enum PictoFactory {
         databaseHelper = new Helper(context);
         List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
         List<Pictogram> pictograms = new ArrayList();
-        ArrayList<Tag> matchingTag = null;
+        ArrayList<Tag> matchingTag = new ArrayList();
         List<Media> matchedMedias = new ArrayList();
 
-
         for(Tag t : allTagsEver){
-            if(t.getCaption() == tag){
+            if(t.getCaption().equals(tag)){
                 matchingTag.add(t);
                 break;
             }
         }
 
-        if(matchingTag == null){
+        if(matchingTag.size() == 0){
             return null;
         }
 
@@ -183,18 +196,19 @@ public enum PictoFactory {
      * tags are implemented in the database, every tag has to be checked against
      * the query...
      * @param context the context in which the method is executed.
-     * @param tags the tags which should be found.
+     * @param tags the tags which should be found. This can be any collection type.
      * @return a list of pictograms.
      */
-    public static List<Pictogram> getPictogramsByTags(Context context, String[] tags){
+    public static List<Pictogram> getPictogramsByTags(Context context, Collection<String> tags){
         databaseHelper = new Helper(context);
         List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
         ArrayList<Tag> matchingTag = null;
         List<Pictogram> pictograms = new ArrayList();
         List<Media> matchedMedias = new ArrayList();
+
         for(String tag : tags){
             for(Tag t : allTagsEver){
-                if(t.getCaption() == tag){
+                if(t.getCaption().equals(tag)){
                     matchingTag.add(t);
                 }
             }
