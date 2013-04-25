@@ -67,17 +67,32 @@ public enum PictoFactory {
                 String aud = null;
                 Pictogram pictogram;
 
-                if(subs.size() == 1){
-                    aud = subs.get(0).getMPath();
-                } else if(subs.size() > 1){
-                    String msg = "Found several sub medias in media id %d, using first sub.";
-                    msg = String.format(msg, media.getId());
+                if(subs.size() > 0){
+                    String msg = "Found media %s(%d) of type %s";
+                    boolean audioSet = false;
 
-                    Log.d(TAG, msg);
-                    aud = subs.get(0).getMPath();
+                    for(Media m : subs){
+                        String subMediaType = m.getMType();
+                        if(subMediaType.equalsIgnoreCase("word") ||
+                           subMediaType.equalsIgnoreCase("sound")){
+                            aud = m.getMPath();
+
+                            msg = String.format(msg, m.getName(), m.getId(), subMediaType);
+                            Log.d(TAG, msg);
+                            audioSet = true;
+                            break;
+                        }
+                    }
+
+                    if(!audioSet){
+                        msg = "No appropriate sub media found in %s(%d), using null.";
+                        msg = String.format(msg, media.getName(), media.getId());
+                        Log.d(TAG, msg);
+                    }
+
                 } else {
-                    String msg = "Found no sub media in %d, using null.";
-                    msg = String.format(msg, media.getId());
+                    String msg = "Found no sub media in %s(%d), using null.";
+                    msg = String.format(msg, media.getName(), media.getId());
 
                     Log.d(TAG, msg);
                 }
@@ -90,8 +105,8 @@ public enum PictoFactory {
 
                 return pictogram;
             } else {
-                String msg = "Media id %d not found to be of type IMAGE.";
-                msg = String.format(msg, media.getId());
+                String msg = "Media id %m(%d) not found to be of type IMAGE.";
+                msg = String.format(msg, media.getName(), media.getId());
 
                 throw new IllegalArgumentException(msg);
             }

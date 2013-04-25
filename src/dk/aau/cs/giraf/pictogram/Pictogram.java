@@ -16,12 +16,18 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
 //TODO: Make custom ImageView and TextView with predefined "niceness"
 
 /**
- * 
+ * Extension of {@FrameLayout} used for GIRAF pictograms.
+ *
+ * <b> This object is not ment to be initialized by developers,
+ * please refere to {@PictoFactory}.</b>
  * @author Croc
  *
  */
 public class Pictogram extends FrameLayout {
     private static final String TAG = "Pictogram";
+
+    /*TODO: add xml from Croc to the application, making it possible for others
+      to use a more scalable image.*/
 
     private final String imagePath;
     private final String textLabel;
@@ -29,8 +35,6 @@ public class Pictogram extends FrameLayout {
     private final long pictogramID;
 
     private Gravity textGravity;
-
-    //Main constructor (no XML)
 
     /**
      * Main constructor, populates most of the fields in the pictogram.
@@ -120,7 +124,7 @@ public class Pictogram extends FrameLayout {
         if(hasAudio()){
             new Thread(new Runnable(){
                     @Override
-					public void run(){
+                                        public void run(){
                         AudioPlayer.INSTANCE.play(audioPath, listener);
                     }
                 }).start();
