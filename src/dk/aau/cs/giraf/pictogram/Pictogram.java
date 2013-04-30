@@ -3,13 +3,19 @@ package dk.aau.cs.giraf.pictogram;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.media.MediaPlayer.OnCompletionListener;
+
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import dk.aau.cs.giraf.oasis.lib.*;
 import dk.aau.cs.giraf.oasis.lib.models.*;
@@ -26,8 +32,8 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
 public class Pictogram extends FrameLayout {
     private static final String TAG = "Pictogram";
 
-    /*TODO: add xml from Croc to the application, making it possible for others
-      to use a more scalable image.*/
+    /* TODO: add xml from Croc to the application, making it possible for others
+       to use a more scalable image.*/
 
     private final String imagePath;
     private final String textLabel;
@@ -54,10 +60,10 @@ public class Pictogram extends FrameLayout {
                      final long id) {
 
         super(context);
-        imagePath = image;
-        textLabel = text;
-        audioPath = audio;
-        pictogramID = id;
+        this.imagePath = image;
+        this.textLabel = text;
+        this.audioPath = audio;
+        this.pictogramID = id;
     }
 
     /**
@@ -68,7 +74,6 @@ public class Pictogram extends FrameLayout {
         renderImage();
         renderText();
     }
-
 
     /**
      * Populates the view with text, making it an actual viewable view.
@@ -143,7 +148,7 @@ public class Pictogram extends FrameLayout {
      * <p> Get tags attached to the pictogram.
      * TODO implement properly.
      */
-    public String[] getTags() {
+    public List<String> getTags() {
         return null;
     }
 

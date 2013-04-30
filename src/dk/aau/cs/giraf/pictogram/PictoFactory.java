@@ -63,6 +63,7 @@ public enum PictoFactory {
         try{
             if(media.getMType().equalsIgnoreCase("IMAGE")){
                 databaseHelper = new Helper(context);
+
                 List<Media> subs = databaseHelper.mediaHelper.getSubMediaByMedia(media);
                 String aud = null;
                 Pictogram pictogram;
@@ -144,6 +145,7 @@ public enum PictoFactory {
                     // anything about misses in the database.
                 }
             }
+
             return pictograms;
         } catch(NullPointerException e) {
             String msg = "Null object passed to convertMedias.";
@@ -174,27 +176,24 @@ public enum PictoFactory {
      * <p>Get all Pictograms that match a tag.
      * @param context the context in which the method is executed.
      * @param tag the tag which should be found.
-     * @return a pictogram.
+     * @return a list of pictograms, can be null.
      */
     public static List<Pictogram> getPictogramsByTag(Context context, String tag){
         databaseHelper = new Helper(context);
-        List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
+        TagsHelper tagsHelper = databaseHelper.tagsHelper;
+        MediaHelper mediaHelper = databaseHelper.mediaHelper;
+
         List<Pictogram> pictograms = new ArrayList();
-        ArrayList<Tag> matchingTag = new ArrayList();
+        List<Tag> matchingTags = new ArrayList();
         List<Media> matchedMedias = new ArrayList();
 
-        for(Tag t : allTagsEver){
-            if(t.getCaption().equals(tag)){
-                matchingTag.add(t);
-                break;
-            }
-        }
+        matchingTags = tagsHelper.getTagsByCaption(tag);
 
-        if(matchingTag.size() == 0){
+        if(matchingTags.isEmpty()){
             return null;
         }
 
-        matchedMedias = databaseHelper.mediaHelper.getMediaByTags(matchingTag);
+        matchedMedias = mediaHelper.getMediaByTags(matchingTags);
 
         pictograms = convertMedias(context, matchedMedias);
 
@@ -205,30 +204,27 @@ public enum PictoFactory {
      * <b> Made of bad runtime.</b>
      *
      * <p>Get all Pictograms that match a list of tags.
-     *
-     * <p> This does not use the getPictogramsByTag method because of the way
-     * tags are implemented in the database, every tag has to be checked against
-     * the query...
      * @param context the context in which the method is executed.
      * @param tags the tags which should be found. This can be any collection type.
-     * @return a list of pictograms.
+     * @return a list of pictograms, this can be null.
      */
     public static List<Pictogram> getPictogramsByTags(Context context, Collection<String> tags){
         databaseHelper = new Helper(context);
-        List<Tag> allTagsEver = databaseHelper.tagsHelper.getTags();
-        ArrayList<Tag> matchingTag = null;
+        MediaHelper mediaHelper = databaseHelper.mediaHelper;
+        TagsHelper tagsHelper = databaseHelper.tagsHelper;
+        List<Tag> matchingTags = new ArrayList();
         List<Pictogram> pictograms = new ArrayList();
         List<Media> matchedMedias = new ArrayList();
 
-        for(String tag : tags){
-            for(Tag t : allTagsEver){
-                if(t.getCaption().equals(tag)){
-                    matchingTag.add(t);
-                }
-            }
+        for(String t : tags){
+            matchingTags = tagsHelper.getTagsByCaption(t);
         }
 
-        matchedMedias = databaseHelper.mediaHelper.getMediaByTags(matchingTag);
+        if(matchingTags.isEmpty()){
+            return null;
+        }
+
+        matchedMedias = mediaHelper.getMediaByTags(matchingTags);
 
         pictograms = convertMedias(context, matchedMedias);
 
