@@ -201,7 +201,7 @@ public enum PictoFactory {
     }
 
     /**
-     * <b> Made of bad runtime.</b>
+     * Gets a list of pictograms from a collection of tags.
      *
      * <p>Get all Pictograms that match a list of tags.
      * @param context the context in which the method is executed.
