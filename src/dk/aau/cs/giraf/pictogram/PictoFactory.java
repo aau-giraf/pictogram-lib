@@ -17,6 +17,12 @@ import dk.aau.cs.giraf.oasis.lib.controllers.*;
 //TODO: If made local, set it to run in seperate thread (DBsync and traversing can be costly)
 
 /**
+ * PictoFactory is a factory class which turns OasisLib Media + submedia in to
+ * pictograms which can be used as views.
+ *
+ * The current version requires the Oasis database to be on the tablet but in
+ * the future it should be possible to make it work with the Wasteland model
+ * database.
  *
  * @author Croc
  *
@@ -101,7 +107,9 @@ public enum PictoFactory {
                 pictogram = new Pictogram(context,
                                           media.getMPath(),
                                           media.getName(),
+                                          media.getName(),
                                           aud,
+                                          media.isMPublic(),
                                           media.getId());
 
                 return pictogram;
