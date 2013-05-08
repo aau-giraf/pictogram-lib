@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class Pictogram extends FrameLayout {
                 }).start();
 
             String msg = "Played audio: " + textLabel;
-            Toast.makeText(super.getContext(), msg, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, msg);
             //TODO check that the thread is stopped again at some point. [OLD PARROT TODO]
         } else {
             Log.d(TAG, "No sound attatched: " + pictogramID + "\n\tOn:" + textLabel);
