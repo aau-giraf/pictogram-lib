@@ -50,6 +50,9 @@ public class Pictogram extends FrameLayout {
      * <p> The input to this constructor is not verified because it only should
      * be used by a {@link PictoFactory}
      *
+     * @deprecated As of next release this method will be protected and not for
+     * use outside of pictogram.
+     *
      * @param context context in which this pictogram is generated.
      * @param image the path to the image used.
      * @param text the label for the image.
