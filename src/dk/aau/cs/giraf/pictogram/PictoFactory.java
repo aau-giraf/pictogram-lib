@@ -107,8 +107,8 @@ public enum PictoFactory {
                 pictogram = new Pictogram(context,
                                           media.getMPath(),
                                           media.getName(),
-                                          media.getName(),
                                           aud,
+                                          media.getName(),
                                           media.isMPublic(),
                                           media.getId());
 
