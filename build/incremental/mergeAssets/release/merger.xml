@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="D:\Windows 7\Dokumenter\SVN\P6 - SW615F14\Temp Git\Cat\pictogram-lib\assets" />
+    </dataSet>
+    <dataSet config="release" >
+        <source path="D:\Windows 7\Dokumenter\SVN\P6 - SW615F14\Temp Git\Cat\pictogram-lib\build-types\release\assets" />
+    </dataSet>
+
+</merger>
