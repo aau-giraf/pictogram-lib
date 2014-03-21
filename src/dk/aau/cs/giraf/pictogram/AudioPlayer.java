@@ -20,6 +20,7 @@
 package dk.aau.cs.giraf.pictogram;
 
 import java.io.IOException;
+import java.sql.Blob;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -77,22 +78,22 @@ public enum AudioPlayer{
      * Plays a specific piece of audio.
      * @param path the path to a piece of audio.
      */
-    public void play(final String path){
+/*    public void play(final String path){
         play(path, null);
     }
-
+*/
     /**
      * Plays a specific piece of audio. Taking a listener for use when the
      * audio has finished playing.
      * @param path the path to a piece of audio.
      * @param listener the callback that will be run
      */
-    public void play(final String path, final OnCompletionListener listener){
+    public void play(final Blob sound_data, final OnCompletionListener listener){
         //TODO find out if we should stop any ongoing playback or not, current implementation stops playback. Making it an user defined option might be too much?
         //TODO play is blocking, make this not true by implementing a seperate thread?
         try {
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(sound_data.toString());
             mediaPlayer.prepare();
 
             if (listener != null){

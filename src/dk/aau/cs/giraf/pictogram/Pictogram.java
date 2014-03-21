@@ -157,7 +157,7 @@ public class Pictogram extends FrameLayout {
             new Thread(new Runnable(){
                     @Override
                                         public void run(){
-                        AudioPlayer.INSTANCE.play(audioPath, listener);
+                        AudioPlayer.INSTANCE.play(sound_data, listener);
                     }
                 }).start();
 

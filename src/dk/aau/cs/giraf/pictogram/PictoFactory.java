@@ -150,7 +150,7 @@ public enum PictoFactory {
      * @param context the context in which the method is executed.
      * @param tag the tag which should be found.
      * @return a list of pictograms, can be null.
-     */
+     *//*
     public static List<Pictogram> getPictogramsByTag(Context context, String tag){
         PictogramController pictogramController = new PictogramController(context);
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
@@ -162,7 +162,7 @@ public enum PictoFactory {
         pictogramsPictogramLib = convertPictograms(context, pictogramsOasis);
 
         return pictogramsPictogramLib;
-    }
+    }*/
 
     /**
      * Gets a list of pictograms from a collection of tags.
@@ -171,7 +171,7 @@ public enum PictoFactory {
      * @param context the context in which the method is executed.
      * @param tags the tags which should be found. This can be any collection type.
      * @return a list of pictograms, this can be null.
-     */
+     *//*
     public static List<Pictogram> getPictogramsByTags(Context context, Collection<String> tags){
         PictogramController pictogramController = new PictogramController(context);
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
@@ -182,7 +182,7 @@ public enum PictoFactory {
         }
 
         return pictogramsPictogramLib;
-    }
+    }*/
     /**
      * Gets a specific pictogram from the database.
      * @param context the context in which the method is executed.
