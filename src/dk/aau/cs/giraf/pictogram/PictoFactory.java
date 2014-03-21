@@ -17,7 +17,7 @@ import dk.aau.cs.giraf.oasis.lib.controllers.*;
 //TODO: If made local, set it to run in seperate thread (DBsync and traversing can be costly)
 
 /**
- * PictoFactory is a factory class which turns OasisLib Media + submedia in to
+ * PictoFactory is a factory class which turns OasisLib Pictograms + submedia in to
  * pictograms which can be used as views.
  *
  * The current version requires the Oasis database to be on the tablet but in
@@ -56,7 +56,7 @@ public enum PictoFactory {
     }
 
     /**
-     * Takes any media from the oasis library and converts it to a pictogram.
+     * Takes any pictogram from the oasis library and converts it to a pictogram.
      *
      * <p> Be warned that the first piece of submedia found will be set
      * as the audio for the pictogram, so if there is a mistake in the DB
@@ -64,8 +64,8 @@ public enum PictoFactory {
      *
      * @param context the context in which the method is executed.
      * @param pictogramOasis a pictogram object from OasisLib to be converted to a pictogram
-     * @return a pictogram that matches the media
-     * @throws IllegalArgumentException if the media is not found to be of the
+     * @return a pictogram that matches the Oasis pictogram
+     * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
      */
     public static Pictogram convertPictogram(Context context, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis) throws IllegalArgumentException{
@@ -88,7 +88,7 @@ public enum PictoFactory {
 
 
     /**
-     * Takes a collection of media and converts it to a list of pictograms.
+     * Takes a collection of pictograms and converts it to a list of pictograms.
      *
      * <p> Be warned that the first piece of submedia found will be set
      * as the audio for the pictogram, so if there is a mistake in the DB
@@ -96,8 +96,8 @@ public enum PictoFactory {
      *
      * @param context the context in which the method is executed.
      * @param pictogramsOasis a collection of pictograms matching Oasis models.
-     * @return a list of pictograms, converted from the medias
-     * @throws IllegalArgumentException if the media is not found to be of the
+     * @return a list of pictograms, converted from the pictograms
+     * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
      */
     public static List<Pictogram> convertPictograms(Context context, Collection<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis)
@@ -128,7 +128,7 @@ public enum PictoFactory {
     /**
      * Gets all pictograms owned by a specific profile.
      * @param context the context in which the method is executed.
-     * @param profile the profile from which the medias will be lifted.
+     * @param profile the profile from which the pictograms will be lifted.
      * @return a {@link list} of pictograms.
      */
     public static List<Pictogram> getPictogramsByProfile(Context context, Profile profile){
@@ -197,4 +197,49 @@ public enum PictoFactory {
         return pictogram;
     }
 
+    /**
+     * Takes any pictogram from the oasis library and converts it to a pictogram.
+     *
+     * <p> Be warned that the first piece of submedia found will be set
+     * as the audio for the pictogram, so if there is a mistake in the DB
+     * it will live on by this function.
+     *
+     * @param context the context in which the method is executed.
+     * @param pictogramOasis a pictogram object from OasisLib to be converted to a pictogram
+     * @return a pictogram that matches the Oasis pictogram
+     * @throws IllegalArgumentException if the pictogram is not found to be of the
+     *             correct type it will be rejected with this exception.
+     */
+    public static dk.aau.cs.giraf.oasis.lib.models.Pictogram convertPictogramToOasis(Context context, Pictogram pictogramPictogramLib)
+                                                                                    throws IllegalArgumentException{
+        try
+        {
+            dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis = new dk.aau.cs.giraf.oasis.lib.models.Pictogram();
+
+            pictogramOasis.setId(pictogramPictogramLib.getPictogramID());
+            pictogramOasis.setAuthor(pictogramPictogramLib.getAuthorID());
+            pictogramOasis.setName(pictogramPictogramLib.getName());
+            if (pictogramPictogramLib.getShareable() == true)
+            {
+                pictogramOasis.setPub(1);
+            }
+            else
+            {
+                pictogramOasis.setPub(0);
+            }
+            pictogramOasis.setImageData(pictogramPictogramLib.getImageData());
+            pictogramOasis.setSoundData(pictogramPictogramLib.getSoundData());
+            pictogramOasis.setInlineText(pictogramPictogramLib.getTextLabel());
+
+
+            return pictogramOasis;
+        }
+        catch(NullPointerException e)
+        {
+            String msg = "Null object passed to convert Pictogram.";
+            Log.e(TAG, msg);
+
+            return null;
+        }
+    }
 }
