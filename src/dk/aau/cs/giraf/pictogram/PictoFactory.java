@@ -42,12 +42,15 @@ public enum PictoFactory {
     * @return all pictograms currently in the database.
     */
     public static List<Pictogram> getAllPictograms(Context context){
-        databaseHelper = new Helper(context);
-        MediaHelper mediaHelper = databaseHelper.mediaHelper;
-        List<Media> allMedia = mediaHelper.getMedia();
+        PictogramController pictogramController = new PictogramController(context);
+
         List<Pictogram> allPictograms = new ArrayList<Pictogram>();
 
-        allPictograms = convertMedias(context, allMedia);
+        for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : pictogramController.getPictograms())
+        {
+            Pictogram pictogramPictogramLib = convertPictogram(context, pictogramOasis);
+            allPictograms.add(pictogramPictogramLib);
+        }
 
         return allPictograms;
     }
@@ -60,66 +63,22 @@ public enum PictoFactory {
      * it will live on by this function.
      *
      * @param context the context in which the method is executed.
-     * @param media a media object to be converted to a pictogram
+     * @param pictogramOasis a pictogram object from OasisLib to be converted to a pictogram
      * @return a pictogram that matches the media
      * @throws IllegalArgumentException if the media is not found to be of the
      *             correct type it will be rejected with this exception.
      */
-    public static Pictogram convertMedia(Context context, Media media) throws IllegalArgumentException{
-        try{
-            if(media.getMType().equalsIgnoreCase("IMAGE")){
-                databaseHelper = new Helper(context);
+    public static Pictogram convertPictogram(Context context, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis) throws IllegalArgumentException{
+        try
+        {
+                Pictogram pictogramPictogramLib = new Pictogram(pictogramOasis.getId(), pictogramOasis.getName(), pictogramOasis.getPub(),
+                    pictogramOasis.getImageData(), pictogramOasis.getSoundData(),
+                    pictogramOasis.getInlineText(), pictogramOasis.getAuthor(), context);
 
-                List<Media> subs = databaseHelper.mediaHelper.getSubMediaByMedia(media);
-                String aud = null;
-                Pictogram pictogram;
-
-                if(subs.size() > 0){
-                    String msg = "Found media %s(%d) of type %s";
-                    boolean audioSet = false;
-
-                    for(Media m : subs){
-                        String subMediaType = m.getMType();
-                        if(subMediaType.equalsIgnoreCase("word") ||
-                           subMediaType.equalsIgnoreCase("sound")){
-                            aud = m.getMPath();
-
-                            msg = String.format(msg, m.getName(), m.getId(), subMediaType);
-                            Log.d(TAG, msg);
-                            audioSet = true;
-                            break;
-                        }
-                    }
-
-                    if(!audioSet){
-                        msg = "No appropriate sub media found in %s(%d), using null.";
-                        msg = String.format(msg, media.getName(), media.getId());
-                        Log.d(TAG, msg);
-                    }
-
-                } else {
-                    String msg = "Found no sub media in %s(%d), using null.";
-                    msg = String.format(msg, media.getName(), media.getId());
-
-                    Log.d(TAG, msg);
-                }
-
-                pictogram = new Pictogram(context,
-                                          media.getMPath(),
-                                          media.getName(),
-                                          aud,
-                                          media.getName(),
-                                          media.isMPublic(),
-                                          media.getId());
-
-                return pictogram;
-            } else {
-                String msg = "Media id %m(%d) not found to be of type IMAGE.";
-                msg = String.format(msg, media.getName(), media.getId());
-
-                throw new IllegalArgumentException(msg);
-            }
-        } catch(NullPointerException e) {
+                return pictogramPictogramLib;
+        }
+        catch(NullPointerException e)
+        {
             String msg = "Null object passed to convertMedia.";
             Log.e(TAG, msg);
 
@@ -136,26 +95,30 @@ public enum PictoFactory {
      * it will live on by this function.
      *
      * @param context the context in which the method is executed.
-     * @param medias a collection of medias matching Oasis models.
+     * @param pictogramsOasis a collection of pictograms matching Oasis models.
      * @return a list of pictograms, converted from the medias
      * @throws IllegalArgumentException if the media is not found to be of the
      *             correct type it will be rejected with this exception.
      */
-    public static List<Pictogram> convertMedias(Context context, Collection<Media> medias){
-        try {
+    public static List<Pictogram> convertPictograms(Context context, Collection<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis)
+    {
+        try
+        {
             List<Pictogram> pictograms = new ArrayList<Pictogram>();
 
-            for(Media m : medias){
-                try{
-                    pictograms.add(convertMedia(context, m));
-                } catch (IllegalArgumentException exc){
+            for(dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : pictogramsOasis){
+                try
+                {
+                    pictograms.add(convertPictogram(context, pictogramOasis));
+                }
+                catch (IllegalArgumentException exc){
                     // we ignore this exception because there is no need to do
                     // anything about misses in the database.
                 }
             }
-
             return pictograms;
-        } catch(NullPointerException e) {
+        }
+        catch(NullPointerException e) {
             String msg = "Null object passed to convertMedias.";
             Log.e(TAG, msg);
             return null;
@@ -169,14 +132,16 @@ public enum PictoFactory {
      * @return a {@link list} of pictograms.
      */
     public static List<Pictogram> getPictogramsByProfile(Context context, Profile profile){
-        List<Pictogram> pictograms = new ArrayList<Pictogram>();
-        List<Media> medias;
-        databaseHelper = new Helper(context);
+        List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
+        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis;
 
-        medias = databaseHelper.mediaHelper.getMediaByProfile(profile);
+        PictogramController pictogramController = new PictogramController(context);
 
-        pictograms = convertMedias(context, medias);
-        return pictograms;
+        pictogramsOasis = pictogramController.getPictogramByProfile(profile);
+
+        pictogramsPictogramLib = convertPictograms(context, pictogramsOasis);
+
+        return pictogramsPictogramLib;
     }
 
 
@@ -187,25 +152,16 @@ public enum PictoFactory {
      * @return a list of pictograms, can be null.
      */
     public static List<Pictogram> getPictogramsByTag(Context context, String tag){
-        databaseHelper = new Helper(context);
-        TagsHelper tagsHelper = databaseHelper.tagsHelper;
-        MediaHelper mediaHelper = databaseHelper.mediaHelper;
+        PictogramController pictogramController = new PictogramController(context);
+        List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
+        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis;
 
-        List<Pictogram> pictograms = new ArrayList();
-        List<Tag> matchingTags = new ArrayList();
-        List<Media> matchedMedias = new ArrayList();
 
-        matchingTags = tagsHelper.getTagsByCaption(tag);
+        pictogramsOasis = pictogramController.getPictogramsByTag(tag);
 
-        if(matchingTags.isEmpty()){
-            return null;
-        }
+        pictogramsPictogramLib = convertPictograms(context, pictogramsOasis);
 
-        matchedMedias = mediaHelper.getMediaByTags(matchingTags);
-
-        pictograms = convertMedias(context, matchedMedias);
-
-        return pictograms;
+        return pictogramsPictogramLib;
     }
 
     /**
@@ -217,26 +173,15 @@ public enum PictoFactory {
      * @return a list of pictograms, this can be null.
      */
     public static List<Pictogram> getPictogramsByTags(Context context, Collection<String> tags){
-        databaseHelper = new Helper(context);
-        MediaHelper mediaHelper = databaseHelper.mediaHelper;
-        TagsHelper tagsHelper = databaseHelper.tagsHelper;
-        List<Tag> matchingTags = new ArrayList();
-        List<Pictogram> pictograms = new ArrayList();
-        List<Media> matchedMedias = new ArrayList();
+        PictogramController pictogramController = new PictogramController(context);
+        List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
 
-        for(String t : tags){
-            matchingTags = tagsHelper.getTagsByCaption(t);
+        for (String tag : tags)
+        {
+            pictogramsPictogramLib.addAll(getPictogramsByTag(context, tag));
         }
 
-        if(matchingTags.isEmpty()){
-            return null;
-        }
-
-        matchedMedias = mediaHelper.getMediaByTags(matchingTags);
-
-        pictograms = convertMedias(context, matchedMedias);
-
-        return pictograms;
+        return pictogramsPictogramLib;
     }
     /**
      * Gets a specific pictogram from the database.
@@ -244,16 +189,10 @@ public enum PictoFactory {
      * @param pictogramId a number identifying the pictogram in the database.
      * @return a pictogram.
      */
-    public static Pictogram getPictogram(Context context, long pictogramId){
+    public static Pictogram getPictogram(Context context, int pictogramId){
+        PictogramController pictogramController = new PictogramController(context);
         Pictogram pictogram;
-
-        databaseHelper = new Helper(context);
-
-        MediaHelper mediaHelper = databaseHelper.mediaHelper;
-
-        Media media = mediaHelper.getMediaById(pictogramId);
-
-        pictogram = convertMedia(context, media);
+        pictogram = convertPictogram(context, pictogramController.getPictogramById(pictogramId));
 
         return pictogram;
     }
