@@ -41,7 +41,7 @@ public class Pictogram extends FrameLayout {
     private int id;
     private String name;
     private int pub; //1=true=public && 0=false=not public
-    private Blob image_data;
+    private Bitmap image_data;
     private Blob sound_data;
     private String inline_text;
     private int author;
@@ -66,7 +66,7 @@ public class Pictogram extends FrameLayout {
      * @return A pictogram for use in GIRAF.
      */
 
-    public Pictogram(int id, String name, int pub, Blob image_data, Blob sound_data, String inline_text, int author, Context context)
+    public Pictogram(int id, String name, int pub, Bitmap image_data, Blob sound_data, String inline_text, int author, Context context)
     {
         super(context);
         this.id = id;
@@ -116,18 +116,7 @@ public class Pictogram extends FrameLayout {
      */
     public void renderImage() {
         String msg = "SQLExeption handling image_data.";
-        Bitmap img = null;
-        try {
-
-            int image_dataLenght = (int) image_data.length();
-            byte[] blobByteArray = image_data.getBytes(1, image_dataLenght);
-            image_data.free();
-            img = BitmapFactory.decodeByteArray(blobByteArray, 0, blobByteArray.length);
-        }
-        catch (SQLException e)
-        {
-            Log.d(TAG, msg);
-        }
+        Bitmap img = image_data;
 
         ImageView image = new ImageView(getContext());
         image.setImageBitmap(img);
@@ -222,7 +211,7 @@ public class Pictogram extends FrameLayout {
         return id;
     }
 
-    public Blob getImageData() {
+    public Bitmap getImageData() {
         return image_data;
     }
 

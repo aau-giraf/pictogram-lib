@@ -19,12 +19,13 @@
 
 package dk.aau.cs.giraf.pictogram;
 
-import java.io.IOException;
-import java.sql.Blob;
-
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
+
+import java.io.IOException;
+import java.sql.Blob;
 
 /**
  * @author Croc
@@ -78,22 +79,24 @@ public enum AudioPlayer{
      * Plays a specific piece of audio.
      * @param path the path to a piece of audio.
      */
-/*    public void play(final String path){
-        play(path, null);
+    public void play(final Blob sound_data){//Blob type should be changed to whatever OasisLib returns as sound.
+        play(sound_data, null);
     }
-*/
+
     /**
      * Plays a specific piece of audio. Taking a listener for use when the
      * audio has finished playing.
      * @param path the path to a piece of audio.
      * @param listener the callback that will be run
      */
-    public void play(final Blob sound_data, final OnCompletionListener listener){
+    public void play(final Blob sound_data, final OnCompletionListener listener){//Blob type should be changed to whatever OasisLib returns as sound.
         //TODO find out if we should stop any ongoing playback or not, current implementation stops playback. Making it an user defined option might be too much?
         //TODO play is blocking, make this not true by implementing a seperate thread?
         try {
+
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(sound_data.toString());
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource("");//URI vs URL (Special Characters? How are the stored in LocalDB?)
             mediaPlayer.prepare();
 
             if (listener != null){
