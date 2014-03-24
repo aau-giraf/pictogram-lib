@@ -151,7 +151,7 @@ public enum PictoFactory {
      * @param tag the tag which should be found.
      * @return a list of pictograms, can be null.
      */
-    public static List<Pictogram> getPictogramsByTag(Context context, String tag){
+    public static List<Pictogram> getPictogramsByTag(Context context, Tag tag){
         PictogramController pictogramController = new PictogramController(context);
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
         List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis;
@@ -172,11 +172,11 @@ public enum PictoFactory {
      * @param tags the tags which should be found. This can be any collection type.
      * @return a list of pictograms, this can be null.
      */
-    public static List<Pictogram> getPictogramsByTags(Context context, Collection<String> tags){
+    public static List<Pictogram> getPictogramsByTags(Context context, Collection<Tag> tags){
         PictogramController pictogramController = new PictogramController(context);
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
 
-        for (String tag : tags)
+        for (Tag tag : tags)
         {
             pictogramsPictogramLib.addAll(getPictogramsByTag(context, tag));
         }
