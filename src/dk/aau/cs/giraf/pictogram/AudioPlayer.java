@@ -25,7 +25,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 
 import java.io.IOException;
-import java.sql.Blob;
 
 /**
  * @author Croc
@@ -79,7 +78,7 @@ public enum AudioPlayer{
      * Plays a specific piece of audio.
      * @param path the path to a piece of audio.
      */
-    public void play(final Blob sound_data){//Blob type should be changed to whatever OasisLib returns as sound.
+    public void play(final byte[] sound_data){//Blob type should be changed to whatever OasisLib returns as sound.
         play(sound_data, null);
     }
 
@@ -89,7 +88,7 @@ public enum AudioPlayer{
      * @param path the path to a piece of audio.
      * @param listener the callback that will be run
      */
-    public void play(final Blob sound_data, final OnCompletionListener listener){//Blob type should be changed to whatever OasisLib returns as sound.
+    public void play(final byte[] sound_data, final OnCompletionListener listener){//Blob type should be changed to whatever OasisLib returns as sound.
         //TODO find out if we should stop any ongoing playback or not, current implementation stops playback. Making it an user defined option might be too much?
         //TODO play is blocking, make this not true by implementing a seperate thread?
         try {

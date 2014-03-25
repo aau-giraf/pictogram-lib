@@ -2,7 +2,6 @@ package dk.aau.cs.giraf.pictogram;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Log;
 import android.view.Gravity;
@@ -10,17 +9,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import dk.aau.cs.giraf.oasis.lib.*;
-import dk.aau.cs.giraf.oasis.lib.models.*;
-import dk.aau.cs.giraf.oasis.lib.controllers.*;
+import dk.aau.cs.giraf.oasis.lib.controllers.TagController;
+import dk.aau.cs.giraf.oasis.lib.models.Tag;
 
 //TODO: Make custom ImageView and TextView with predefined "niceness"
 
@@ -42,7 +35,7 @@ public class Pictogram extends FrameLayout {
     private String name;
     private int pub; //1=true=public && 0=false=not public
     private Bitmap image_data;
-    private Blob sound_data;
+    private byte[] sound_data;
     private String inline_text;
     private int author;
 
@@ -66,7 +59,7 @@ public class Pictogram extends FrameLayout {
      * @return A pictogram for use in GIRAF.
      */
 
-    public Pictogram(int id, String name, int pub, Bitmap image_data, Blob sound_data, String inline_text, int author, Context context)
+    public Pictogram(int id, String name, int pub, Bitmap image_data, byte[] sound_data, String inline_text, int author, Context context)
     {
         super(context);
         this.id = id;
@@ -215,7 +208,7 @@ public class Pictogram extends FrameLayout {
         return image_data;
     }
 
-    public Blob getSoundData() {
+    public byte[] getSoundData() {
         return sound_data;
     }
 }
