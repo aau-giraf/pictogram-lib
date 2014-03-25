@@ -228,7 +228,7 @@ public enum PictoFactory {
                 pictogramOasis.setPub(0);
             }
             pictogramOasis.setImageData(pictogramPictogramLib.getImageData());
-            pictogramOasis.setSoundData(pictogramPictogramLib.getSoundData());
+            pictogramOasis.setSoundDataBytes(pictogramPictogramLib.getSoundData());
             pictogramOasis.setInlineText(pictogramPictogramLib.getTextLabel());
 
 
