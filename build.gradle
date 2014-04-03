@@ -18,10 +18,17 @@ android {
     compileSdkVersion 15
     buildToolsVersion "19.0.1"
 
-    defaultConfig{
-        minSdkVersion 15
-        targetSdkVersion 19
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 15
+        versionCode 1
+        versionName "1.0"
     }
+    lintOptions {
+        abortOnError false
+    }
+
+
     
     sourceSets {
         main {
