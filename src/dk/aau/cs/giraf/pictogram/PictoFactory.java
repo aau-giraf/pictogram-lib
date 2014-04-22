@@ -42,14 +42,36 @@ public enum PictoFactory {
     * @return all pictograms currently in the database.
     */
     public static List<Pictogram> getAllPictograms(Context context){
+        if (context == null)
+        {
+            return null;
+        }
+
         PictogramController pictogramController = new PictogramController(context);
 
         List<Pictogram> allPictograms = new ArrayList<Pictogram>();
+        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> allPictogramsOasis = new ArrayList<dk.aau.cs.giraf.oasis.lib.models.Pictogram>();
 
-        for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : pictogramController.getPictograms())
+        try
         {
-            Pictogram pictogramPictogramLib = convertPictogram(context, pictogramOasis);
-            allPictograms.add(pictogramPictogramLib);
+            allPictogramsOasis = pictogramController.getPictograms();
+        }
+        catch (Exception e)
+        {
+            e.getStackTrace();
+        }
+
+        for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : allPictogramsOasis)
+        {
+            try
+            {
+                Pictogram pictogramPictogramLib = convertPictogram(context, pictogramOasis);
+                allPictograms.add(pictogramPictogramLib);
+            }
+            catch (Exception e)
+            {
+                e.getStackTrace();
+            }
         }
 
         return allPictograms;
