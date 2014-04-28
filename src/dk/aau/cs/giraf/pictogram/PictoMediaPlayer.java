@@ -1,4 +1,4 @@
-package dk.aau.cs.giraf.pictocreator.audiorecorder;
+package dk.aau.cs.giraf.pictogram;
 
 import android.content.Context;
 import android.media.AudioManager;
