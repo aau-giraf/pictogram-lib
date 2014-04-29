@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -30,13 +31,16 @@ public class PictoMediaPlayer {
         return actualVolume / maxVolume;
     }
 
-    public void setDataSource(FileDescriptor fileDescriptor) throws IOException{
+    public void setDataSource(String path) throws IOException{
         if(hasSound)
         {
             mediaPlayer.release();
             assignMediaPlayer();
         }
-        mediaPlayer.setDataSource(fileDescriptor);
+
+        FileInputStream fileInputStream = new FileInputStream(path);
+
+        mediaPlayer.setDataSource(fileInputStream.getFD());
         hasSound = true;
     }
 
