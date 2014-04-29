@@ -18,15 +18,21 @@ import java.net.URLConnection;
 /**
  * Created by Christian on 28-04-14.
  */
-public class tts {
-    public static void PlayText(String textToPlay)
+public class tts implements Runnable{
+    String imageURL;
+    String fileName;
+    public void PlayText(String textToPlay)
     {
-
-        String url="http://www.translate.google.com/translate_tts?ie=UTF-8&q="+textToPlay+"&tl=da_dk";
-        DownloadFile(url,"test");
+        imageURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+textToPlay+"&tl=da_dk";
+        fileName = "test.mp3";
     }
 
-    public static void DownloadFile(String imageURL, String fileName) {
+    @Override
+    public void run() {
+        DownloadFile(imageURL, fileName);
+    }
+
+    public void DownloadFile(String imageURL, String fileName) {
         try{
         URL url = new URL(imageURL);
         File file = new File(fileName);
