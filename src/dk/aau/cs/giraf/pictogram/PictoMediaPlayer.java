@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -54,14 +53,14 @@ public class PictoMediaPlayer {
     }
 
 
-    public void stopMusic(){
+    public void stopSound(){
         isPlaying = false;
         mediaPlayer.stop();
     }
 
     public void playSound(){
         if(isPlaying)
-            stopMusic();
+            stopSound();
         if(hasSound)
         {
             isPlaying = true;
