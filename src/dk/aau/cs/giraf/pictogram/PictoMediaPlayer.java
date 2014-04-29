@@ -62,7 +62,10 @@ public class PictoMediaPlayer {
         if(isPlaying)
             stopMusic();
         if(hasSound)
+        {
+            isPlaying = true;
             mediaPlayer.prepareAsync();
+        }
     }
 
     private void assignMediaPlayer(){
@@ -76,7 +79,6 @@ public class PictoMediaPlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mediaPlayer.setVolume(getVolume(), getVolume());
-            isPlaying = true;
             mediaPlayer.start();
         }
     };
