@@ -55,6 +55,7 @@ public class PictoMediaPlayer {
 
 
     public void stopMusic(){
+        isPlaying = false;
         mediaPlayer.stop();
     }
 
