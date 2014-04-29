@@ -60,7 +60,9 @@ public class PictoMediaPlayer {
 
     public void playSound(){
         if(isPlaying)
+        {
             stopSound();
+        }
         if(hasSound)
         {
             isPlaying = true;
