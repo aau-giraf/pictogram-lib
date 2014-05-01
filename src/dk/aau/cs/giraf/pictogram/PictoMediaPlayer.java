@@ -228,32 +228,5 @@ public class PictoMediaPlayer implements CompleteListener{
             pictogramListIndex = 0;
         }
     }
-
-
-
-    private boolean NoSound(Pictogram p)
-    {
-        if(isNetworkAvailable())
-        {
-            tts t = new tts(activity);
-            t.PlayText(p.getInlineText());
-            Runnable task = t;
-            Thread worker = new Thread(task);
-            worker.start();
-            try{
-                worker.join();
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            p.setSoundDataBytes(t.SoundData);
-            PictogramController pictogramController = new PictogramController(activity);
-            pictogramController.modifyPictogram(p);
-            return true;
-        }
-        return false;
-    }
-
 }
 
