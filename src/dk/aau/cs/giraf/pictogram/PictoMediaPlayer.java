@@ -7,6 +7,8 @@ import android.media.MediaPlayer;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import dk.aau.cs.giraf.oasis.lib.models.Tag;
+
 /**
  * Created by Praetorian on 28-04-14.
  */
@@ -21,6 +23,19 @@ public class PictoMediaPlayer {
         return isPlaying;
     }
 
+    public  PictoMediaPlayer (Context activity, String path)
+    {
+        this.activity = activity;
+        assignMediaPlayer();
+        setDataSource(path);
+    }
+
+    public PictoMediaPlayer(Context activity){
+        this.activity = activity;
+        assignMediaPlayer();
+    }
+
+
     private float getVolume(){
         AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
         float actualVolume = (float) audioManager
@@ -30,27 +45,30 @@ public class PictoMediaPlayer {
         return actualVolume / maxVolume;
     }
 
-    public void setDataSource(String path) throws IOException{
+    public void setDataSource(String path){
         if(hasSound)
         {
             mediaPlayer.release();
             assignMediaPlayer();
         }
 
-        FileInputStream fileInputStream = new FileInputStream(path);
+        try {
+            FileInputStream fileInputStream = new FileInputStream(path);
 
-        mediaPlayer.setDataSource(fileInputStream.getFD());
-        hasSound = true;
+            mediaPlayer.setDataSource(fileInputStream.getFD());
+            hasSound = true;
+        }
+        catch (IOException e)
+        {
+            e.getStackTrace();
+        }
     }
 
     public void setCustomListener(CompleteListener completeListener){
         this.customListener = completeListener;
     }
 
-    public PictoMediaPlayer(Context activity){
-        this.activity = activity;
-        assignMediaPlayer();
-    }
+
 
 
     public void stopSound(){
