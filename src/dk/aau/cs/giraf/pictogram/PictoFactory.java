@@ -61,17 +61,24 @@ public enum PictoFactory {
             e.getStackTrace();
         }
 
-        for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : allPictogramsOasis)
+        if (!allPictogramsOasis.isEmpty() && !allPictogramsOasis.contains(null))
         {
-            try
+            for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : allPictogramsOasis)
             {
-                Pictogram pictogramPictogramLib = convertPictogram(context, pictogramOasis);
-                allPictograms.add(pictogramPictogramLib);
+                try
+                {
+                    Pictogram pictogramPictogramLib = convertPictogram(context, pictogramOasis);
+                    allPictograms.add(pictogramPictogramLib);
+                }
+                catch (Exception e)
+                {
+                    e.getStackTrace();
+                }
             }
-            catch (Exception e)
-            {
-                e.getStackTrace();
-            }
+        }
+        else
+        {
+            return null;
         }
 
         return allPictograms;
