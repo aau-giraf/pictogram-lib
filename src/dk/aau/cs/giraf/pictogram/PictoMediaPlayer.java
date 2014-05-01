@@ -220,7 +220,7 @@ public class PictoMediaPlayer {
             {
                 e.printStackTrace();
             }
-
+            p.setSoundDataBytes(t.SoundData);
             PictogramController pictogramController = new PictogramController(activity);
             pictogramController.modifyPictogram(p);
             return true;
