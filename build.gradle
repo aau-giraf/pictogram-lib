@@ -12,6 +12,7 @@ buildscript {
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':OasisLib')
+    compile files('espeak/jespeak-0.2-alpha.jar')
 }
 
 android {
