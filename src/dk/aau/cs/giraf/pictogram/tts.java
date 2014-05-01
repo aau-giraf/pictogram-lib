@@ -1,5 +1,6 @@
 package dk.aau.cs.giraf.pictogram;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -21,6 +22,13 @@ import java.net.URLConnection;
 public class tts implements Runnable{
     String imageURL;
     String fileName;
+    Context c;
+
+    public void tts (Context c)
+    {
+        this.c = c;
+    }
+
     public void PlayText(String textToPlay)
     {
         imageURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+textToPlay+"&tl=da_dk";
@@ -34,23 +42,24 @@ public class tts implements Runnable{
 
     public void DownloadFile(String imageURL, String fileName) {
         try{
-        URL url = new URL(imageURL);
-        File file = new File(fileName);
+            URL url = new URL(imageURL);
+            File file = new File(c.getCacheDir().getPath() + File.separator + fileName);
+            file.delete();
 
-        long startTime = System.currentTimeMillis();
-        URLConnection ucon = url.openConnection();
-        InputStream is = ucon.getInputStream();
-        BufferedInputStream bis = new BufferedInputStream(is);
-        ByteArrayBuffer baf = new ByteArrayBuffer(50);
-        int current = 0;
-        while ((current = bis.read()) != -1)
-            baf.append((byte) current);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(baf.toByteArray());
-        fos.close();
+            long startTime = System.currentTimeMillis();
+            URLConnection ucon = url.openConnection();
+            InputStream is = ucon.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            ByteArrayBuffer baf = new ByteArrayBuffer(50);
+            int current = 0;
+            while ((current = bis.read()) != -1)
+                baf.append((byte) current);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(baf.toByteArray());
+            fos.close();
         }
         catch (IOException e){
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }
