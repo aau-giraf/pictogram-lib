@@ -24,7 +24,7 @@ public class tts implements Runnable{
     String fileName;
     Context c;
 
-    public void tts (Context c)
+    public tts (Context c)
     {
         this.c = c;
     }
@@ -40,11 +40,11 @@ public class tts implements Runnable{
         DownloadFile(imageURL, fileName);
     }
 
-    public void DownloadFile(String imageURL, String fileName) {
+    public byte[] DownloadFile(String imageURL, String fileName) {
         try{
             URL url = new URL(imageURL);
-            File file = new File(c.getCacheDir().getPath() + File.separator + fileName);
-            file.delete();
+            //File file = new File(c.getCacheDir().getPath() + File.separator + fileName);
+            //file.delete();
 
             long startTime = System.currentTimeMillis();
             URLConnection ucon = url.openConnection();
@@ -54,12 +54,15 @@ public class tts implements Runnable{
             int current = 0;
             while ((current = bis.read()) != -1)
                 baf.append((byte) current);
-            FileOutputStream fos = new FileOutputStream(file);
+            /*FileOutputStream fos = new FileOutputStream(file);
             fos.write(baf.toByteArray());
-            fos.close();
+            fos.close();*/
+
+            return baf.toByteArray();
         }
         catch (IOException e){
             e.printStackTrace();
         }
+        return null;
     }
 }
