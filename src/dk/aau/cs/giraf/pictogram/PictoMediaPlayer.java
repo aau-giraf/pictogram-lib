@@ -3,6 +3,9 @@ package dk.aau.cs.giraf.pictogram;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
 import dk.aau.cs.giraf.oasis.lib.models.*;
 import dk.aau.cs.giraf.oasis.lib.models.Pictogram;
 
@@ -40,13 +44,7 @@ public class PictoMediaPlayer {
         this.activity = activity;
         assignMediaPlayer();
 
-        try{
-        setDataSource(pictogram.getAudioFile(activity).getPath());
-        }
-        catch (IOException e)
-        {
-            e.getStackTrace();
-        }
+        setDataSource(pictogram);
     }
 
     public PictoMediaPlayer (Context activity, byte[] byteArray)
@@ -80,10 +78,20 @@ public class PictoMediaPlayer {
         }
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(path);
+            if(path != null)
+            {
+                FileInputStream fileInputStream = new FileInputStream(path);
 
-            mediaPlayer.setDataSource(fileInputStream.getFD());
-            hasSound = true;
+                mediaPlayer.setDataSource(fileInputStream.getFD());
+                hasSound = true;
+            }
+            else
+            {
+                hasSound = false;
+                String text = "This is a toast. I like toast. Mmmmmm... toast.";
+                GToast toast = GToast.makeText(activity, text, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
         catch (IOException e)
         {
@@ -93,7 +101,23 @@ public class PictoMediaPlayer {
 
     public void setDataSource(Pictogram pictogram){
         try{
-            setDataSource(pictogram.getAudioFile(activity).getPath());
+            File picFile = pictogram.getAudioFile(activity);
+            if(picFile == null)
+            {
+                boolean check = NoSound(pictogram);
+                if(check)
+                {
+                    setDataSource(pictogram.getAudioFile(activity).getPath());
+                }
+                else
+                {
+                    setDataSource((String)null);
+                }
+            }
+            else
+            {
+                setDataSource(pictogram.getAudioFile(activity).getPath());
+            }
         }
         catch (IOException e)
         {
@@ -172,4 +196,36 @@ public class PictoMediaPlayer {
         public void soundDonePlaying();
     }
 
+    private boolean NoSound(Pictogram p)
+    {
+        if(isNetworkAvailable())
+        {
+            tts t = new tts(activity);
+            t.PlayText(p.getInlineText());
+            Runnable task = t;
+            Thread worker = new Thread(task);
+            worker.start();
+            try{
+                worker.join();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+
+            PictogramController pictogramController = new PictogramController(activity);
+            pictogramController.modifyPictogram(p);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
+
+
