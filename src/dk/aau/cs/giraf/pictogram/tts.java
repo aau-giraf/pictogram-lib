@@ -40,7 +40,6 @@ public class tts implements Runnable{
     public void PlayText(String textToPlay)
     {
         imageURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+URLEncoder.encode(textToPlay)+"&tl=da_dk";
-        fileName = "test.mp3";
     }
 
     public boolean NoSound(dk.aau.cs.giraf.oasis.lib.models.Pictogram p)
