@@ -101,28 +101,35 @@ public class PictoMediaPlayer {
     }
 
     public void setDataSource(Pictogram pictogram){
-        try{
-            File picFile = pictogram.getAudioFile(activity);
-            if(picFile == null)
-            {
-                boolean check = NoSound(pictogram);
-                if(check)
+        if(pictogram != null)
+        {
+            try{
+                File picFile = pictogram.getAudioFile(activity);
+                if(picFile == null)
                 {
-                    setDataSource(pictogram.getAudioFile(activity).getPath());
+                    boolean check = NoSound(pictogram);
+                    if(check)
+                    {
+                        setDataSource(pictogram.getAudioFile(activity).getPath());
+                    }
+                    else
+                    {
+                        setDataSource((String)null);
+                    }
                 }
                 else
                 {
-                    setDataSource((String)null);
+                    setDataSource(pictogram.getAudioFile(activity).getPath());
                 }
             }
-            else
+            catch (IOException e)
             {
-                setDataSource(pictogram.getAudioFile(activity).getPath());
+                e.getStackTrace();
             }
         }
-        catch (IOException e)
+        else
         {
-            e.getStackTrace();
+            hasSound = false;
         }
     }
 
