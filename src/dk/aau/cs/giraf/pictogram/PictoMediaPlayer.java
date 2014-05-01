@@ -218,9 +218,10 @@ public class PictoMediaPlayer implements CompleteListener{
     @Override
     public void soundDonePlaying() {
         pictogramListIndex ++;
-        if (pictogramListIndex < pictogramList.size())
+        if (pictogramListIndex < pictogramList.size() && pictogramList.get(pictogramListIndex) != null)
         {
             setDataSource(pictogramList.get(pictogramListIndex));
+            playSound();
         }
         else
         {
