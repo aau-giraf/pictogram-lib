@@ -107,7 +107,8 @@ public class PictoMediaPlayer {
                 File picFile = pictogram.getAudioFile(activity);
                 if(picFile == null)
                 {
-                    boolean check = NoSound(pictogram);
+                    tts t = new tts(activity);
+                    boolean check = t.NoSound(pictogram);
                     if(check)
                     {
                         setDataSource(pictogram.getAudioFile(activity).getPath());
@@ -204,36 +205,7 @@ public class PictoMediaPlayer {
         public void soundDonePlaying();
     }
 
-    private boolean NoSound(Pictogram p)
-    {
-        if(isNetworkAvailable())
-        {
-            tts t = new tts(activity);
-            t.PlayText(p.getInlineText());
-            Runnable task = t;
-            Thread worker = new Thread(task);
-            worker.start();
-            try{
-                worker.join();
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            p.setSoundDataBytes(t.SoundData);
-            PictogramController pictogramController = new PictogramController(activity);
-            pictogramController.modifyPictogram(p);
-            return true;
-        }
-        return false;
-    }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 }
 
 

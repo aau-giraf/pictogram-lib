@@ -3,6 +3,8 @@ package dk.aau.cs.giraf.pictogram;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 
 import org.apache.http.client.utils.URIUtils;
@@ -17,6 +19,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+
+import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
+import dk.aau.cs.giraf.oasis.lib.models.*;
 
 /**
  * Created by Christian on 28-04-14.
@@ -36,6 +41,36 @@ public class tts implements Runnable{
     {
         imageURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+URLEncoder.encode(textToPlay)+"&tl=da_dk";
         fileName = "test.mp3";
+    }
+
+    public boolean NoSound(dk.aau.cs.giraf.oasis.lib.models.Pictogram p)
+    {
+        if(isNetworkAvailable())
+        {
+            PlayText(p.getInlineText());
+            Runnable task = this;
+            Thread worker = new Thread(task);
+            worker.start();
+            try{
+                worker.join();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            p.setSoundDataBytes(this.SoundData);
+            PictogramController pictogramController = new PictogramController(c);
+            pictogramController.modifyPictogram(p);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
