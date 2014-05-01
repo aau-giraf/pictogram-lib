@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dk.aau.cs.giraf.gui.GToast;
 import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
 import dk.aau.cs.giraf.oasis.lib.models.*;
 import dk.aau.cs.giraf.oasis.lib.models.Pictogram;
@@ -88,7 +89,7 @@ public class PictoMediaPlayer {
             else
             {
                 hasSound = false;
-                String text = "This is a toast. I like toast. Mmmmmm... toast.";
+                String text = "Lyden kunne ikke afspilles, da du ikke er på nettet.";
                 GToast toast = GToast.makeText(activity, text, Toast.LENGTH_SHORT);
                 toast.show();
             }
