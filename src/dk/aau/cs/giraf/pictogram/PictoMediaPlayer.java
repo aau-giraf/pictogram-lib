@@ -111,7 +111,8 @@ public class PictoMediaPlayer implements CompleteListener{
                 File picFile = pictogram.getAudioFile(activity);
                 if(picFile == null)
                 {
-                    boolean check = NoSound(pictogram);
+                    tts t = new tts(activity);
+                    boolean check = t.NoSound(pictogram);
                     if(check)
                     {
                         setDataSource(pictogram.getAudioFile(activity).getPath());
@@ -254,11 +255,5 @@ public class PictoMediaPlayer implements CompleteListener{
         return false;
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 }
 
