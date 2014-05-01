@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import dk.aau.cs.giraf.gui.GToast;
@@ -22,12 +23,15 @@ import dk.aau.cs.giraf.oasis.lib.models.Pictogram;
 /**
  * Created by Praetorian on 28-04-14.
  */
-public class PictoMediaPlayer {
+public class PictoMediaPlayer implements CompleteListener{
     private MediaPlayer mediaPlayer;
     private Context activity;
     private boolean hasSound;
     private boolean isPlaying;
     private CompleteListener customListener;
+    private int pictogramListIndex = 0;
+    private ArrayList<Pictogram> pictogramList;
+    private CompleteListener TempCompleteListener;
 
     public boolean isPlaying(){
         return isPlaying;
@@ -200,9 +204,31 @@ public class PictoMediaPlayer {
         }
     };
 
-    public interface CompleteListener{
-        public void soundDonePlaying();
+    public void playListOfPictograms(ArrayList<Pictogram> pictogramList)
+    {
+        pictogramListIndex = 0;
+        this.pictogramList = pictogramList;
+        TempCompleteListener = customListener;
+        this.setCustomListener(this);
+        this.setDataSource(pictogramList.get(pictogramListIndex));
+        this.playSound();
     }
+
+    @Override
+    public void soundDonePlaying() {
+        pictogramListIndex ++;
+        if (pictogramListIndex < pictogramList.size())
+        {
+            setDataSource(pictogramList.get(pictogramListIndex));
+        }
+        else
+        {
+            this.setCustomListener(TempCompleteListener);
+            pictogramListIndex = 0;
+        }
+    }
+
+
 
     private boolean NoSound(Pictogram p)
     {
@@ -235,5 +261,4 @@ public class PictoMediaPlayer {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
-
 
