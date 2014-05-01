@@ -4,10 +4,15 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import dk.aau.cs.giraf.oasis.lib.models.Tag;
+import dk.aau.cs.giraf.oasis.lib.models.*;
+import dk.aau.cs.giraf.oasis.lib.models.Pictogram;
 
 /**
  * Created by Praetorian on 28-04-14.
@@ -23,11 +28,33 @@ public class PictoMediaPlayer {
         return isPlaying;
     }
 
-    public  PictoMediaPlayer (Context activity, String path)
+    public PictoMediaPlayer (Context activity, String path)
     {
         this.activity = activity;
         assignMediaPlayer();
         setDataSource(path);
+    }
+
+    public PictoMediaPlayer (Context activity, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogram)
+    {
+        this.activity = activity;
+        assignMediaPlayer();
+
+        try{
+        setDataSource(pictogram.getAudioFile(activity).getPath());
+        }
+        catch (IOException e)
+        {
+            e.getStackTrace();
+        }
+    }
+
+    public PictoMediaPlayer (Context activity, byte[] byteArray)
+    {
+        this.activity = activity;
+        assignMediaPlayer();
+
+        setDataSource(byteArray);
     }
 
     public PictoMediaPlayer(Context activity){
@@ -64,12 +91,40 @@ public class PictoMediaPlayer {
         }
     }
 
+    public void setDataSource(Pictogram pictogram){
+        try{
+            setDataSource(pictogram.getAudioFile(activity).getPath());
+        }
+        catch (IOException e)
+        {
+            e.getStackTrace();
+        }
+    }
+
+    public void setDataSource(byte[] byteArray){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+        String fileName = dateFormat.format(new Date());
+
+        File newFile = new File(activity.getCacheDir().getPath() + File.separator + fileName);
+
+        try
+        {
+            FileOutputStream fileOutputStream = new FileOutputStream(newFile.getPath());
+
+            fileOutputStream.write(byteArray);
+            fileOutputStream.close();
+
+            setDataSource(newFile.getPath());
+        }
+        catch (IOException e)
+        {
+            e.getStackTrace();
+        }
+    }
+
     public void setCustomListener(CompleteListener completeListener){
         this.customListener = completeListener;
     }
-
-
-
 
     public void stopSound(){
         isPlaying = false;
