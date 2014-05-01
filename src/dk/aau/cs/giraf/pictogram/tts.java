@@ -11,9 +11,6 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -28,7 +25,6 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
  */
 public class tts implements Runnable{
     String imageURL;
-    String fileName;
     Context c;
     public byte[] SoundData = null;
 
@@ -74,12 +70,12 @@ public class tts implements Runnable{
 
     @Override
     public void run() {
-        SoundData = DownloadFile(imageURL, fileName);
+        SoundData = DownloadFile(soundURL);
     }
 
-    public byte[] DownloadFile(String imageURL, String fileName) {
+    public byte[] DownloadFile(String soundURL) {
         try{
-            URL url = new URL(imageURL);
+            URL url = new URL(soundURL);
 
             long startTime = System.currentTimeMillis();
             URLConnection ucon = url.openConnection();
