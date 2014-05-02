@@ -24,7 +24,7 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
  * Created by Christian on 28-04-14.
  */
 public class tts implements Runnable{
-    String imageURL;
+    String soundURL;
     Context c;
     public byte[] SoundData = null;
 
@@ -35,7 +35,7 @@ public class tts implements Runnable{
 
     public void PlayText(String textToPlay)
     {
-        imageURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+URLEncoder.encode(textToPlay)+"&tl=da_dk";
+        soundURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+URLEncoder.encode(textToPlay)+"&tl=da_dk";
     }
 
     public boolean NoSound(dk.aau.cs.giraf.oasis.lib.models.Pictogram p)
@@ -70,10 +70,10 @@ public class tts implements Runnable{
 
     @Override
     public void run() {
-        SoundData = DownloadFile(soundURL);
+        SoundData = DownloadFile();
     }
 
-    public byte[] DownloadFile(String soundURL) {
+    public byte[] DownloadFile() {
         try{
             URL url = new URL(soundURL);
 
