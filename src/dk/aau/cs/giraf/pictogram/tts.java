@@ -23,7 +23,7 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
 /**
  * Created by Christian on 28-04-14.
  */
-public class tts{
+public class tts implements Runnable{
     String soundURL;
     Context c;
     public byte[] SoundData = null;
@@ -43,7 +43,16 @@ public class tts{
         if(isNetworkAvailable())
         {
             PlayText(p.getInlineText());
-            DownloadFile();
+            Runnable task = this;
+            Thread worker = new Thread(task);
+            worker.start();
+            try{
+                worker.join();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
             p.setSoundDataBytes(this.SoundData);
             PictogramController pictogramController = new PictogramController(c);
             pictogramController.modifyPictogram(p);
@@ -59,7 +68,12 @@ public class tts{
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private void DownloadFile() {
+    @Override
+    public void run() {
+        SoundData = DownloadFile();
+    }
+
+    public byte[] DownloadFile() {
         try{
             URL url = new URL(soundURL);
 
@@ -72,10 +86,11 @@ public class tts{
             while ((current = bis.read()) != -1)
                 baf.append((byte) current);
 
-            SoundData = baf.toByteArray();
+            return baf.toByteArray();
         }
         catch (IOException e){
             e.printStackTrace();
         }
+        return null;
     }
 }
