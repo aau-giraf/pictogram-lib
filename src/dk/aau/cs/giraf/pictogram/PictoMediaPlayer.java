@@ -175,8 +175,16 @@ public class PictoMediaPlayer implements CompleteListener{
         }
         if(hasSound)
         {
-            isPlaying = true;
-            mediaPlayer.prepareAsync();
+            try
+            {
+                isPlaying = true;
+                mediaPlayer.prepareAsync();
+            }
+            catch (Exception e)
+            {
+                e.getStackTrace();
+            }
+
         }
     }
 
