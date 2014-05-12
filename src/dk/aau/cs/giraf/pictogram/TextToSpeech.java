@@ -23,12 +23,12 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
 /**
  * Created by Christian on 28-04-14.
  */
-public class tts implements Runnable{
+public class TextToSpeech implements Runnable{
     String soundURL;
     Context c;
     public byte[] SoundData = null;
 
-    public tts (Context c)
+    public TextToSpeech(Context c)
     {
         this.c = c;
     }
