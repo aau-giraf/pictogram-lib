@@ -42,21 +42,24 @@ public class TextToSpeech implements Runnable{
     {
         if(isNetworkAvailable())
         {
-            PlayText(p.getInlineText());
-            Runnable task = this;
-            Thread worker = new Thread(task);
-            worker.start();
-            try{
-                worker.join();
-            }
-            catch (InterruptedException e)
+            if(p.getInlineText() != "")
             {
-                e.printStackTrace();
+                PlayText(p.getInlineText());
+                Runnable task = this;
+                Thread worker = new Thread(task);
+                worker.start();
+                try{
+                    worker.join();
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                p.setSoundDataBytes(this.SoundData);
+                PictogramController pictogramController = new PictogramController(c);
+                pictogramController.modifyPictogram(p);
+                return true;
             }
-            p.setSoundDataBytes(this.SoundData);
-            PictogramController pictogramController = new PictogramController(c);
-            pictogramController.modifyPictogram(p);
-            return true;
         }
         return false;
     }
