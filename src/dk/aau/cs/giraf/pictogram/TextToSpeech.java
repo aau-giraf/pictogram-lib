@@ -23,12 +23,12 @@ import dk.aau.cs.giraf.oasis.lib.models.*;
 /**
  * Created by Christian on 28-04-14.
  */
-public class tts implements Runnable{
+public class TextToSpeech implements Runnable{
     String soundURL;
     Context c;
     public byte[] SoundData = null;
 
-    public tts (Context c)
+    public TextToSpeech(Context c)
     {
         this.c = c;
     }
@@ -42,21 +42,24 @@ public class tts implements Runnable{
     {
         if(isNetworkAvailable())
         {
-            PlayText(p.getInlineText());
-            Runnable task = this;
-            Thread worker = new Thread(task);
-            worker.start();
-            try{
-                worker.join();
-            }
-            catch (InterruptedException e)
+            if(p.getInlineText() != "")
             {
-                e.printStackTrace();
+                PlayText(p.getInlineText());
+                Runnable task = this;
+                Thread worker = new Thread(task);
+                worker.start();
+                try{
+                    worker.join();
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                p.setSoundDataBytes(this.SoundData);
+                PictogramController pictogramController = new PictogramController(c);
+                pictogramController.modifyPictogram(p);
+                return true;
             }
-            p.setSoundDataBytes(this.SoundData);
-            PictogramController pictogramController = new PictogramController(c);
-            pictogramController.modifyPictogram(p);
-            return true;
         }
         return false;
     }

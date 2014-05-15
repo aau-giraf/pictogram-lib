@@ -112,7 +112,7 @@ public class PictoMediaPlayer implements CompleteListener{
                 File picFile = pictogram.getAudioFile(activity);
                 if(picFile == null)
                 {
-                    tts t = new tts(activity);
+                    TextToSpeech t = new TextToSpeech(activity);
                     boolean check = t.NoSound(pictogram);
                     if(check)
                     {
