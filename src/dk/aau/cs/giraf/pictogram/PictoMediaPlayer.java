@@ -227,7 +227,8 @@ public class PictoMediaPlayer implements CompleteListener{
         }
         else
         {
-            GToast.makeText(this.activity, "Ingen piktogrammer at oplæse.", 15);
+            GToast messageToast = GToast.makeText(this.activity, "Ingen piktogrammer at oplæse.", 15);
+            messageToast.show();
         }
     }
 
