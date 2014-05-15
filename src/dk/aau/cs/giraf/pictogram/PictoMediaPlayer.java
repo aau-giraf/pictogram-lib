@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dk.aau.cs.giraf.gui.GComponent;
 import dk.aau.cs.giraf.gui.GToast;
 import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
 import dk.aau.cs.giraf.oasis.lib.models.*;
@@ -219,8 +220,15 @@ public class PictoMediaPlayer implements CompleteListener{
         this.pictogramList = pictogramList;
         TempCompleteListener = customListener;
         this.setCustomListener(this);
-        this.setDataSource(pictogramList.get(pictogramListIndex));
-        this.playSound();
+        if (!pictogramList.isEmpty())
+        {
+            this.setDataSource(pictogramList.get(pictogramListIndex));
+            this.playSound();
+        }
+        else
+        {
+            GToast.makeText(this.activity, "Ingen piktogrammer at oplæse.", 15);
+        }
     }
 
     @Override
