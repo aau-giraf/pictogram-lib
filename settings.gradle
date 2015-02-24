@@ -1,2 +1,4 @@
 include ':OasisLib'
 include ':GIRAF_Components'
+include ':metadata'
+project(':metadata').projectDir = new File('OasisLib/metadata')
