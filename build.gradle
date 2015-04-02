@@ -7,8 +7,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.+'
-        classpath 'dk.aau.cs.giraf:giraf-library:1.0'
+        classpath 'dk.aau.cs.giraf:giraf-library:1.1'
     }
+}
+// Always download latest snapshot
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 apply plugin: 'android-library'
@@ -20,6 +24,7 @@ repositories {
     maven {
         url 'http://cs-cust06-int.cs.aau.dk/artifactory/libraries'
     }
+    mavenLocal()
 }
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -55,5 +60,4 @@ android {
 
 girafLibrary {
     libraryName 'pictogramLib'
-    version '1.0'
 }
