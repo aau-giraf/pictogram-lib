@@ -42,7 +42,7 @@ public class PictoMediaPlayer implements CompleteListener{
     {
         this.activity = activity;
         assignMediaPlayer();
-        setDataSource(path);
+        setDataSource(path.replaceAll("[^a-zA-Z0-9]+",""));
     }
 
     public PictoMediaPlayer (Context activity, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogram)
