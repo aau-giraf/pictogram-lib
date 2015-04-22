@@ -44,7 +44,7 @@ public class TextToSpeech implements Runnable{
         {
             if(p.getInlineText() != "")
             {
-                PlayText(p.getInlineText());
+                PlayText(p.getInlineText().replaceAll("_",""));
                 Runnable task = this;
                 Thread worker = new Thread(task);
                 worker.start();
