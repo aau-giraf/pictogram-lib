@@ -8,9 +8,9 @@ import java.util.List;
 import android.content.Context;
 import android.util.Log;
 
-import dk.aau.cs.giraf.oasis.lib.Helper;
-import dk.aau.cs.giraf.oasis.lib.models.*;
-import dk.aau.cs.giraf.oasis.lib.controllers.*;
+import dk.aau.cs.giraf.dblib.Helper;
+import dk.aau.cs.giraf.dblib.models.*;
+import dk.aau.cs.giraf.dblib.controllers.*;
 
 
 //TODO: Make this a service that applications can hook to
@@ -50,7 +50,7 @@ public enum PictoFactory {
         PictogramController pictogramController = new PictogramController(context);
 
         List<Pictogram> allPictograms = new ArrayList<Pictogram>();
-        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> allPictogramsOasis = new ArrayList<dk.aau.cs.giraf.oasis.lib.models.Pictogram>();
+        List<dk.aau.cs.giraf.dblib.models.Pictogram> allPictogramsOasis = new ArrayList<dk.aau.cs.giraf.dblib.models.Pictogram>();
 
         try
         {
@@ -63,7 +63,7 @@ public enum PictoFactory {
 
         if (!allPictogramsOasis.isEmpty() && !allPictogramsOasis.contains(null))
         {
-            for (dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : allPictogramsOasis)
+            for (dk.aau.cs.giraf.dblib.models.Pictogram pictogramOasis : allPictogramsOasis)
             {
                 try
                 {
@@ -97,7 +97,7 @@ public enum PictoFactory {
      * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
      */
-    public static Pictogram convertPictogram(Context context, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis) throws IllegalArgumentException{
+    public static Pictogram convertPictogram(Context context, dk.aau.cs.giraf.dblib.models.Pictogram pictogramOasis) throws IllegalArgumentException{
         try
         {
                 Pictogram pictogramPictogramLib = new Pictogram(pictogramOasis.getId(), pictogramOasis.getName(), pictogramOasis.getPub(),
@@ -129,13 +129,13 @@ public enum PictoFactory {
      * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
      */
-    public static List<Pictogram> convertPictograms(Context context, Collection<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis)
+    public static List<Pictogram> convertPictograms(Context context, Collection<dk.aau.cs.giraf.dblib.models.Pictogram> pictogramsOasis)
     {
         try
         {
             List<Pictogram> pictograms = new ArrayList<Pictogram>();
 
-            for(dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis : pictogramsOasis){
+            for(dk.aau.cs.giraf.dblib.models.Pictogram pictogramOasis : pictogramsOasis){
                 try
                 {
                     pictograms.add(convertPictogram(context, pictogramOasis));
@@ -162,7 +162,7 @@ public enum PictoFactory {
      */
     public static List<Pictogram> getPictogramsByProfile(Context context, Profile profile){
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
-        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis;
+        List<dk.aau.cs.giraf.dblib.models.Pictogram> pictogramsOasis;
 
         PictogramController pictogramController = new PictogramController(context);
 
@@ -183,7 +183,7 @@ public enum PictoFactory {
     public static List<Pictogram> getPictogramsByTag(Context context, Tag tag){
         PictogramController pictogramController = new PictogramController(context);
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
-        List<dk.aau.cs.giraf.oasis.lib.models.Pictogram> pictogramsOasis;
+        List<dk.aau.cs.giraf.dblib.models.Pictogram> pictogramsOasis;
 
 
         pictogramsOasis = pictogramController.getPictogramsByTag(tag);
@@ -239,11 +239,11 @@ public enum PictoFactory {
      * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
      */
-    public static dk.aau.cs.giraf.oasis.lib.models.Pictogram convertPictogramToOasis(Context context, Pictogram pictogramPictogramLib)
+    public static dk.aau.cs.giraf.dblib.models.Pictogram convertPictogramToOasis(Context context, Pictogram pictogramPictogramLib)
                                                                                     throws IllegalArgumentException{
         try
         {
-            dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogramOasis = new dk.aau.cs.giraf.oasis.lib.models.Pictogram();
+            dk.aau.cs.giraf.dblib.models.Pictogram pictogramOasis = new dk.aau.cs.giraf.dblib.models.Pictogram();
 
             pictogramOasis.setId(pictogramPictogramLib.getPictogramID());
             pictogramOasis.setAuthor(pictogramPictogramLib.getAuthorID());

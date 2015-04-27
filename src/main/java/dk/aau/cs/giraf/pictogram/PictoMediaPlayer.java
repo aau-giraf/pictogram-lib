@@ -18,9 +18,9 @@ import java.util.Date;
 
 import dk.aau.cs.giraf.gui.GComponent;
 import dk.aau.cs.giraf.gui.GToast;
-import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
-import dk.aau.cs.giraf.oasis.lib.models.*;
-import dk.aau.cs.giraf.oasis.lib.models.Pictogram;
+import dk.aau.cs.giraf.dblib.controllers.PictogramController;
+import dk.aau.cs.giraf.dblib.models.*;
+import dk.aau.cs.giraf.dblib.models.Pictogram;
 
 /**
  * Created by Praetorian on 28-04-14.
@@ -46,7 +46,7 @@ public class PictoMediaPlayer implements CompleteListener{
         setDataSource(path.replaceAll("[^a-zA-Z0-9]+",""));
     }
 
-    public PictoMediaPlayer (Context activity, dk.aau.cs.giraf.oasis.lib.models.Pictogram pictogram)
+    public PictoMediaPlayer (Context activity, dk.aau.cs.giraf.dblib.models.Pictogram pictogram)
     {
         this.activity = activity;
         assignMediaPlayer();

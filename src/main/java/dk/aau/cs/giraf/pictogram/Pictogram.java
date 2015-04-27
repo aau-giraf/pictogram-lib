@@ -12,8 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.aau.cs.giraf.oasis.lib.controllers.TagController;
-import dk.aau.cs.giraf.oasis.lib.models.Tag;
+import dk.aau.cs.giraf.dblib.controllers.TagController;
+import dk.aau.cs.giraf.dblib.models.Tag;
 
 //TODO: Make custom ImageView and TextView with predefined "niceness"
 
