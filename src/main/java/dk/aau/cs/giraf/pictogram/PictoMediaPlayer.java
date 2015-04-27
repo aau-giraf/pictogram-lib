@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -220,9 +221,17 @@ public class PictoMediaPlayer implements CompleteListener{
         this.pictogramList = pictogramList;
         TempCompleteListener = customListener;
         this.setCustomListener(this);
+        ByteArrayOutputStream bas = new ByteArrayOutputStream( );
         if (!pictogramList.isEmpty())
         {
-            this.setDataSource(pictogramList.get(pictogramListIndex));
+            for (Pictogram pic : this.pictogramList) {
+                try {
+                    bas.write(pic.getSoundData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            this.setDataSource(bas.toByteArray());
             this.playSound();
         }
         else
