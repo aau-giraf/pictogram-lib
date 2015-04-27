@@ -17,8 +17,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-import dk.aau.cs.giraf.oasis.lib.controllers.PictogramController;
-import dk.aau.cs.giraf.oasis.lib.models.*;
+import dk.aau.cs.giraf.dblib.controllers.PictogramController;
+import dk.aau.cs.giraf.dblib.models.*;
 
 /**
  * Created by Christian on 28-04-14.
@@ -38,7 +38,7 @@ public class TextToSpeech implements Runnable{
         soundURL = "http://www.translate.google.com/translate_tts?ie=UTF-8&q="+URLEncoder.encode(textToPlay)+"&tl=da_dk";
     }
 
-    public boolean NoSound(dk.aau.cs.giraf.oasis.lib.models.Pictogram p)
+    public boolean NoSound(dk.aau.cs.giraf.dblib.models.Pictogram p)
     {
         if(isNetworkAvailable())
         {
