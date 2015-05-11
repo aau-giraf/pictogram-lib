@@ -221,7 +221,7 @@ public enum PictoFactory {
     public static Pictogram getPictogram(Context context, int pictogramId){
         PictogramController pictogramController = new PictogramController(context);
         Pictogram pictogram;
-        pictogram = convertPictogram(context, pictogramController.getPictogramById(pictogramId));
+        pictogram = convertPictogram(context, pictogramController.getById(pictogramId));
 
         return pictogram;
     }

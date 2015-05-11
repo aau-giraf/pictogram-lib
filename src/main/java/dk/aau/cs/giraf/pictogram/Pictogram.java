@@ -31,13 +31,13 @@ public class Pictogram extends FrameLayout {
     /* TODO: add xml from Croc to the application, making it possible for others
        to use a more scalable image.*/
 
-    private int id;
+    private long id;
     private String name;
     private int pub; //1=true=public && 0=false=not public
     private Bitmap image_data;
     private byte[] sound_data;
     private String inline_text;
-    private int author;
+    private long author;
 
     /**
      * Constructor used by {@link PictoFactory} for populating the fields in a
@@ -59,7 +59,7 @@ public class Pictogram extends FrameLayout {
      * @return A pictogram for use in GIRAF.
      */
 
-    public Pictogram(int id, String name, int pub, Bitmap image_data, byte[] sound_data, String inline_text, int author, Context context)
+    public Pictogram(long id, String name, int pub, Bitmap image_data, byte[] sound_data, String inline_text, long author, Context context)
     {
         super(context);
         this.id = id;
@@ -197,10 +197,10 @@ public class Pictogram extends FrameLayout {
     /**
      * @return pictogramID the id which the pictogram is found under in the database.
      */
-    public int getPictogramID() {
+    public long getPictogramID() {
         return id;
     }
-    public int getAuthorID() {
+    public long getAuthorID() {
         return id;
     }
 
