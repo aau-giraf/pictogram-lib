@@ -158,7 +158,7 @@ public enum PictoFactory {
      * Gets all pictograms owned by a specific profile.
      * @param context the context in which the method is executed.
      * @param profile the profile from which the pictograms will be lifted.
-     * @return a {@link list} of pictograms.
+     * @return a {@link } of pictograms.
      */
     public static List<Pictogram> getPictogramsByProfile(Context context, Profile profile){
         List<Pictogram> pictogramsPictogramLib = new ArrayList<Pictogram>();
@@ -256,7 +256,7 @@ public enum PictoFactory {
             {
                 pictogramOasis.setPub(0);
             }
-            pictogramOasis.setImageData(pictogramPictogramLib.getImageData());
+            pictogramOasis.setImage(pictogramPictogramLib.getImageData());
             pictogramOasis.setSoundDataBytes(pictogramPictogramLib.getSoundData());
             pictogramOasis.setInlineText(pictogramPictogramLib.getTextLabel());
 
