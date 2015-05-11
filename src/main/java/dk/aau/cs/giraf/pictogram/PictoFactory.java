@@ -54,7 +54,7 @@ public enum PictoFactory {
 
         try
         {
-            allPictogramsOasis = pictogramController.getPictograms();
+            allPictogramsOasis = pictogramController.getPublicPictograms();
         }
         catch (Exception e)
         {
@@ -218,7 +218,7 @@ public enum PictoFactory {
      * @param pictogramId a number identifying the pictogram in the database.
      * @return a pictogram.
      */
-    public static Pictogram getPictogram(Context context, int pictogramId){
+    public static Pictogram getPictogram(Context context, long pictogramId){
         PictogramController pictogramController = new PictogramController(context);
         Pictogram pictogram;
         pictogram = convertPictogram(context, pictogramController.getById(pictogramId));
@@ -234,7 +234,7 @@ public enum PictoFactory {
      * it will live on by this function.
      *
      * @param context the context in which the method is executed.
-     * @param pictogramOasis a pictogram object from OasisLib to be converted to a pictogram
+     * @param pictogramPictogramLib a pictogram object from OasisLib to be converted to a pictogram
      * @return a pictogram that matches the Oasis pictogram
      * @throws IllegalArgumentException if the pictogram is not found to be of the
      *             correct type it will be rejected with this exception.
