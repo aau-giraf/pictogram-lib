@@ -1,250 +1,135 @@
 package dk.aau.cs.giraf.pictogram;
 
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.widget.Toast;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Locale;
 
-import dk.aau.cs.giraf.gui.GComponent;
-import dk.aau.cs.giraf.gui.GToast;
-import dk.aau.cs.giraf.dblib.controllers.PictogramController;
-import dk.aau.cs.giraf.dblib.models.*;
 import dk.aau.cs.giraf.dblib.models.Pictogram;
 
 /**
- * Created by Praetorian on 28-04-14.
+ * Created by kenneth on 3/1/16.
  */
-public class PictoMediaPlayer implements CompleteListener{
-    private MediaPlayer mediaPlayer;
-    private Context activity;
-    private boolean hasSound;
-    private boolean isPlaying;
-    private CompleteListener customListener;
-    private int pictogramListIndex = 0;
-    private ArrayList<Pictogram> pictogramList;
-    private CompleteListener TempCompleteListener;
+public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitListener {
 
-    public boolean isPlaying(){
-        return isPlaying;
-    }
+    private TextToSpeech tts;
 
-    public PictoMediaPlayer (Context activity, String path)
-    {
-        this.activity = activity;
-        assignMediaPlayer();
-        setDataSource(path.replaceAll("[^a-zA-Z0-9]+",""));
-    }
-
-    public PictoMediaPlayer (Context activity, dk.aau.cs.giraf.dblib.models.Pictogram pictogram)
-    {
-        this.activity = activity;
-        assignMediaPlayer();
-
-        setDataSource(pictogram);
-    }
-
-    public PictoMediaPlayer (Context activity, byte[] byteArray)
-    {
-        this.activity = activity;
-        assignMediaPlayer();
-
-        setDataSource(byteArray);
-    }
-
-    public PictoMediaPlayer(Context activity){
-        this.activity = activity;
-        assignMediaPlayer();
-    }
+    private final IBinder myBinder = new MyLocalBinder();
 
 
-    private float getVolume(){
-        AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-        float actualVolume = (float) audioManager
-                .getStreamVolume(AudioManager.STREAM_MUSIC);
-        float maxVolume = (float) audioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        return actualVolume / maxVolume;
-    }
+    /**
+     Return the binder for the PictoMediaPlayer
 
-    public void setDataSource(String path){
-        if(hasSound)
-        {
-            mediaPlayer.release();
-            assignMediaPlayer();
-        }
-
-        try {
-            if(path != null)
-            {
-                FileInputStream fileInputStream = new FileInputStream(path);
-
-                mediaPlayer.setDataSource(fileInputStream.getFD());
-                hasSound = true;
-            }
-            else
-            {
-                hasSound = false;
-                String text = "Lyden kunne ikke afspilles, da du ikke er på nettet.";
-                GToast toast = GToast.makeText(activity, text, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-        catch (IOException e)
-        {
-            e.getStackTrace();
+     @return The binder for PictoMediaPlayer
+     */
+    public class MyLocalBinder extends Binder {
+        public PictoMediaPlayer getService() {
+            return PictoMediaPlayer.this;
         }
     }
 
-    public void setDataSource(Pictogram pictogram){
-        if(pictogram != null)
-        {
-            try{
-                File picFile = pictogram.getAudioFile(activity);
-                if(picFile == null)
-                {
-                    TextToSpeech t = new TextToSpeech(activity);
-                    boolean check = t.NoSound(pictogram);
-                    if(check)
-                    {
-                        setDataSource(pictogram.getAudioFile(activity).getPath());
-                    }
-                    else
-                    {
-                        setDataSource((String)null);
-                    }
-                }
-                else
-                {
-                    setDataSource(pictogram.getAudioFile(activity).getPath());
-                }
-            }
-            catch (IOException e)
-            {
-                e.getStackTrace();
-            }
-        }
-        else
-        {
-            hasSound = false;
-        }
-    }
-
-    public void setDataSource(byte[] byteArray){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-        String fileName = dateFormat.format(new Date());
-
-        File newFile = new File(activity.getCacheDir().getPath() + File.separator + fileName);
-
-        try
-        {
-            FileOutputStream fileOutputStream = new FileOutputStream(newFile.getPath());
-
-            fileOutputStream.write(byteArray);
-            fileOutputStream.close();
-
-            setDataSource(newFile.getPath());
-        }
-        catch (IOException e)
-        {
-            e.getStackTrace();
-        }
-    }
-
-    public void setCustomListener(CompleteListener completeListener){
-        this.customListener = completeListener;
-    }
-
-    public void stopSound(){
-        isPlaying = false;
-        mediaPlayer.stop();
-    }
-
-    public void playSound(){
-        if(isPlaying)
-        {
-            stopSound();
-        }
-        if(hasSound)
-        {
-            try
-            {
-                isPlaying = true;
-                mediaPlayer.prepareAsync();
-            }
-            catch (Exception e)
-            {
-                e.getStackTrace();
-            }
-
-        }
-    }
-
-    private void assignMediaPlayer(){
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(onPreparedListener);
-        mediaPlayer.setOnCompletionListener(onCompletionListener);
-    }
-
-    private final MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            mediaPlayer.setVolume(getVolume(), getVolume());
-            mediaPlayer.start();
-        }
-    };
-
-    private final MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            isPlaying = false;
-            if(customListener != null){
-                customListener.soundDonePlaying();
-            }
-        }
-    };
-
-    public void playListOfPictograms(ArrayList<Pictogram> pictogramList)
-    {
-        pictogramListIndex = 0;
-        this.pictogramList = pictogramList;
-        TempCompleteListener = customListener;
-        this.setCustomListener(this);
-        if (!pictogramList.isEmpty())
-        {
-            this.setDataSource(pictogramList.get(pictogramListIndex));
-            this.playSound();
-        }
-        else
-        {
-            GToast messageToast = GToast.makeText(this.activity, "Ingen piktogrammer at oplæse.", 15);
-            messageToast.show();
-        }
-    }
-
+    /**
+     * Called when the service is bound, if there is not TextToSpeech it is created
+     * @param intent
+     * @return
+     */
     @Override
-    public void soundDonePlaying() {
-        pictogramListIndex ++;
-        if (pictogramListIndex < pictogramList.size() && pictogramList.get(pictogramListIndex) != null)
+    public IBinder onBind(Intent intent) {
+        if(tts == null)
         {
-            setDataSource(pictogramList.get(pictogramListIndex));
-            playSound();
+            tts = new TextToSpeech(this, this);
+            tts.setSpeechRate(0.8f);
+        }
+        return myBinder;
+    }
+
+    /**
+     *
+     * @param status
+     */
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = tts.setLanguage(Locale.getDefault());
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("PictoMediaPlayer", "This Language is not supported");
+            }
+
+        } else {
+            Log.e("PictoMediaPlayer", "Initilization Failed!");
+        }
+    }
+
+    /**
+     * Make the TextToSpeech engine speak the string
+     * @param play the string that have to be played
+     */
+    public void Play(String play) {
+        if(tts != null) {
+            if(play != null) {
+                tts.speak(play, TextToSpeech.QUEUE_ADD, null);
+            }
         }
         else
         {
-            this.setCustomListener(TempCompleteListener);
-            pictogramListIndex = 0;
+            Log.e("PictoMediaPlayer", "PictoMediaPlayer not Initilizatied");
         }
+    }
+
+
+    /**
+     * Make the TextToSpeech engine speak the Pictogram sound
+     * @param pictogram
+     */
+    public void Play(dk.aau.cs.giraf.pictogram.Pictogram pictogram)
+    {
+        if(pictogram.hasAudio())
+        {
+            //pictogram.playAudio();
+        }
+        else
+        {
+            Play(pictogram.getName());
+        }
+    }
+
+    /**
+     * Is any sound being played
+     * @return
+     */
+    public boolean isPlaying()
+    {
+        return tts.isSpeaking();
+    }
+
+    /**
+     * Make the TextToSpeech engine play a list of pictograms
+     * @param PictogramList A ArrayList of Pictograms (size 8)
+     */
+    public void playListOfPictograms(ArrayList<Pictogram> PictogramList)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            if(PictogramList.get(i) != null)
+            {
+                Play(PictogramList.get(i).getName());
+            }
+        }
+    }
+
+    /**̈́
+     * Stops the TextToSpeech engine from playing the current sound
+     */
+    public void stopSound()
+    {
+        tts.stop();
     }
 }
-
