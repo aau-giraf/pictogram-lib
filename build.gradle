@@ -7,8 +7,8 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.+'
-        classpath 'dk.aau.cs.giraf:giraf-library:1.2'
+        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'dk.aau.cs.giraf:giraf-library:2.0.0'
     }
 }
 // Always download latest snapshot
@@ -16,10 +16,10 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-apply plugin: 'android-library'
-apply plugin: 'dk.giraf.lib'
+apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'dk.giraf.lib'
 
 repositories {
     maven {
@@ -30,10 +30,10 @@ repositories {
 }
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile(group: 'dk.aau.cs.giraf', name: 'girafComponent', version: '10.0.0', ext: 'aar')
-    compile(group: 'dk.aau.cs.giraf', name: 'oasisLib', version: '7.0.0', ext: 'aar')
-    compile(group: 'dk.aau.cs.giraf', name: 'localDb', version: '5.1.1', ext: 'aar')
-    compile(group: 'dk.aau.cs.giraf', name: 'meta-database', version: '3.2.0')
+    compile 'dk.aau.cs.giraf:girafComponent:10.0.0@aar'
+    compile 'dk.aau.cs.giraf:oasisLib:7.0.0@aar'
+    compile 'dk.aau.cs.giraf:localDb:5.1.1@aar'
+    compile 'dk.aau.cs.giraf:meta-database:3.2.0'
     compile files('espeak/jespeak-0.2-alpha.jar')
 }
 
@@ -43,7 +43,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     compileSdkVersion 15
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '23.0.2'
 
     lintOptions {
         abortOnError false
