@@ -75,6 +75,10 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
             if(play != null) {
                 tts.speak(play, TextToSpeech.QUEUE_ADD, null);
             }
+            else
+            {
+                Log.e("PictoMediaPlayer", "No String to play");
+            }
         }
         else
         {
