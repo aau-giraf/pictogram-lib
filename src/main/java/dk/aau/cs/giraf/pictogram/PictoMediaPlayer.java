@@ -95,6 +95,7 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
     {
         if(pictogram.hasAudio())
         {
+            //TODO play the pictograms audio
             //pictogram.playAudio();
         }
         else
