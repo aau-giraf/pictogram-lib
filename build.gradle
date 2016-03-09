@@ -25,7 +25,6 @@ repositories {
         url 'http://cs-cust06-int.cs.aau.dk/artifactory/libraries'
         mavenCentral()
     }
-    mavenLocal()
 }
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
