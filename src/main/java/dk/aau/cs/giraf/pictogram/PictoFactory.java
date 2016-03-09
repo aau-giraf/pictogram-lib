@@ -1,7 +1,6 @@
 package dk.aau.cs.giraf.pictogram;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,11 +99,13 @@ public enum PictoFactory {
     public static Pictogram convertPictogram(Context context, dk.aau.cs.giraf.dblib.models.Pictogram pictogramOasis) throws IllegalArgumentException{
         try
         {
-                Pictogram pictogramPictogramLib = new Pictogram(pictogramOasis.getId(), pictogramOasis.getName(), pictogramOasis.getPub(),
-                    pictogramOasis.getImageData(), pictogramOasis.getSoundData(),
+            //helper is needed to get image from dblib
+            Helper helper = new Helper(context);
+            Pictogram pictogramPictogramLib = new Pictogram(pictogramOasis.getId(), pictogramOasis.getName(), pictogramOasis.getPub(),
+                    helper.pictogramHelper.getImage(pictogramOasis), pictogramOasis.getSoundData(),
                     pictogramOasis.getInlineText(), pictogramOasis.getAuthor(), context);
 
-                return pictogramPictogramLib;
+            return pictogramPictogramLib;
         }
         catch(NullPointerException e)
         {
@@ -256,7 +257,9 @@ public enum PictoFactory {
             {
                 pictogramOasis.setPub(0);
             }
-            pictogramOasis.setImage(pictogramPictogramLib.getImageData());
+            //helper is needed to set image on a dblib pictogram
+            Helper helper = new Helper(context);
+            helper.pictogramHelper.setImage(pictogramOasis,pictogramPictogramLib.getImageData());
             pictogramOasis.setSoundDataBytes(pictogramPictogramLib.getSoundData());
             pictogramOasis.setInlineText(pictogramPictogramLib.getTextLabel());
 
