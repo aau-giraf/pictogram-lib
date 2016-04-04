@@ -8,7 +8,9 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Queue;
 
 /**
  * Created by kenneth on 3/1/16.
@@ -16,6 +18,8 @@ import java.util.Locale;
 public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitListener {
 
     private TextToSpeech tts;
+    private Queue<dk.aau.cs.giraf.dblib.models.Pictogram> PictoQueue = new LinkedList<dk.aau.cs.giraf.dblib.models.Pictogram>();
+
 
     private final IBinder myBinder = new MyLocalBinder();
 
@@ -41,7 +45,7 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
         if(tts == null)
         {
             tts = new TextToSpeech(this, this);
-            tts.setSpeechRate(0.8f);
+            tts.setSpeechRate(0.6f);
         }
         return myBinder;
     }
@@ -110,20 +114,34 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
      */
     public boolean isPlaying()
     {
-        return tts.isSpeaking();
+        return PictoQueue.size() > 0 || tts.isSpeaking();
     }
 
     /**
      * Make the TextToSpeech engine play a list of pictograms
-     * @param PictogramList A ArrayList of Pictograms (size 8)
+     * @param PictogramList A ArrayList of Pictograms
      */
     public void playListOfPictograms(ArrayList<dk.aau.cs.giraf.dblib.models.Pictogram> PictogramList)
     {
-        for(int i = 0; i < 8; i++)
+        for(int i = 0; i < PictogramList.size(); i++)
         {
             if(PictogramList.get(i) != null)
             {
-                Play(PictogramList.get(i).getName());
+                PictoQueue.add(PictogramList.get(i));
+            }
+        }
+        while (PictoQueue.size() != 0)
+        {
+            if (!tts.isSpeaking())
+            {
+                Play(PictoQueue.poll().getName());
+            }
+            try {
+                Thread.sleep(250);
+            }
+            catch (Exception e)
+            {
+
             }
         }
     }
