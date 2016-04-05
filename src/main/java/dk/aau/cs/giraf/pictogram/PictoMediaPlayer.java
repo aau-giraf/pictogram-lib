@@ -130,20 +130,26 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
                 PictoQueue.add(PictogramList.get(i));
             }
         }
-        while (PictoQueue.size() != 0)
-        {
-            if (!tts.isSpeaking())
-            {
-                Play(PictoQueue.poll().getName());
-            }
-            try {
-                Thread.sleep(250);
-            }
-            catch (Exception e)
-            {
+        //Used to change the icon of the play button from Stop to Start when it is done playing pictograms
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (PictoQueue.size() != 0)
+                {
+                    if (!tts.isSpeaking())
+                    {
+                        Play(PictoQueue.poll().getName());
+                    }
+                    try {
+                        Thread.sleep(250);
+                    }
+                    catch (Exception e)
+                    {
 
+                    }
+                }
             }
-        }
+        }).start();
     }
 
     /**̈́
@@ -152,5 +158,6 @@ public class PictoMediaPlayer extends Service implements TextToSpeech.OnInitList
     public void stopSound()
     {
         tts.stop();
+        PictoQueue.clear();
     }
 }
