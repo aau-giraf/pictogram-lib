@@ -62,7 +62,7 @@ artifactory {
 publishing {
     publications {
         artifacts(MavenPublication) {
-            artifact "$buildDir/outputs/aar/giraf-component-lib-release.aar"
+            artifact "$buildDir/outputs/aar/pictogram-lib-release.aar"
         }
     }
 }
@@ -75,7 +75,6 @@ dependencies {
     compile(group: 'dk.aau.cs.giraf', name: 'meta-database', version: 'latest.integration', changing: true, ext: 'aar')
     //compile files('espeak/jespeak-0.2-alpha.jar')
     compile ('com.android.support:support-v4:23.2.1')
-    compile(group: 'dk.aau.cs.giraf', name: 'db-lib', version: 'latest.integration', changing: true, ext: 'aar')
     //compile(group: 'dk.aau.cs.giraf', name: 'local-db', version: 'latest.integration', changing: true, ext: 'aar')
     //compile(group: 'dk.aau.cs.giraf', name: 'meta-database', version: 'latest.integration', changing: true)
     //compile files('libs/libGoogleAnalyticsServices.jar')
